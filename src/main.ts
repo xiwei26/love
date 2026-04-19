@@ -4,9 +4,10 @@ import { createMusicController } from "./audio/musicController";
 import { createApp } from "./app/createApp";
 import { renderStage } from "./app/renderStage";
 import { assetManifest } from "./content/assets";
-import { sceneCopy } from "./content/copy";
+import { sceneCopy, sceneSubtitleCues } from "./content/copy";
 import { storyScenes } from "./content/storyConfig";
 import { createStoryEngine } from "./engine/storyEngine";
+import type { SceneId } from "./engine/types";
 import { preloadImages } from "./lib/preloadAssets";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -24,14 +25,16 @@ const chestTrigger = document.querySelector<HTMLButtonElement>(
 const startOverlay = document.querySelector<HTMLButtonElement>(
   '[data-role="start-overlay"]',
 );
+const subtitle = document.querySelector<HTMLElement>('[data-role="subtitle"]');
 const viewportNote = document.querySelector<HTMLElement>('[data-role="viewport-note"]');
 const bgm = document.querySelector<HTMLAudioElement>('[data-role="bgm"]');
 
-if (!appRoot || !chestTrigger || !startOverlay || !viewportNote || !bgm) {
+if (!appRoot || !chestTrigger || !startOverlay || !subtitle || !viewportNote || !bgm) {
   throw new Error("Critical app nodes are missing");
 }
 
 const stageRoot = appRoot;
+const subtitleElement = subtitle;
 
 bgm.src = assetManifest.music;
 viewportNote.hidden = window.innerWidth >= 1024;
@@ -55,6 +58,32 @@ const copyByScene = {
 } as const;
 
 const stageImageAssets = [...Object.values(assetManifest.sprites), ...assetManifest.photos];
+let subtitleTimers: number[] = [];
+
+function clearSubtitleCues() {
+  subtitleTimers.forEach((timer) => window.clearTimeout(timer));
+  subtitleTimers = [];
+}
+
+function applySubtitle(text: string) {
+  subtitleElement.textContent = text;
+}
+
+function scheduleSubtitleCues(sceneId: SceneId) {
+  clearSubtitleCues();
+
+  const cues = sceneSubtitleCues[sceneId];
+
+  if (!cues?.length) {
+    return;
+  }
+
+  subtitleTimers = cues.map((cue) =>
+    window.setTimeout(() => {
+      applySubtitle(cue.text);
+    }, Math.max(40, Math.round(cue.atMs * speedFactor))),
+  );
+}
 
 function renderScene(sceneId: keyof typeof copyByScene) {
   renderStage(stageRoot, {
@@ -64,6 +93,7 @@ function renderScene(sceneId: keyof typeof copyByScene) {
     showPrompt: sceneId === "chest",
     proposalLine: "",
   });
+  scheduleSubtitleCues(sceneId);
 }
 
 renderScene("opening");
@@ -91,5 +121,6 @@ startOverlay.addEventListener("click", async () => {
 });
 
 chestTrigger.addEventListener("click", () => {
+  clearSubtitleCues();
   engine.revealProposal();
 });

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { assetManifest } from "../../src/content/assets";
-import { finalProposalLine, sceneCopy } from "../../src/content/copy";
+import {
+  finalProposalLine,
+  sceneCopy,
+  sceneSubtitleCues,
+} from "../../src/content/copy";
 import { storyScenes } from "../../src/content/storyConfig";
 
 describe("story content contracts", () => {
@@ -25,6 +29,19 @@ describe("story content contracts", () => {
     expect(sceneCopy.opening).toContain("秘密");
     expect(sceneCopy.chestPrompt).toContain("终章");
     expect(finalProposalLine).toBe("你愿意嫁给我吗？");
+  });
+
+  it("adds follow-up subtitle cues for the dragon and rescue scenes", () => {
+    expect(sceneSubtitleCues.dragon?.map((cue) => cue.text)).toEqual(
+      expect.arrayContaining([
+        "勇士奚为踏入龙穴，一路过关斩将。",
+      ]),
+    );
+    expect(sceneSubtitleCues.rescue?.map((cue) => cue.text)).toEqual(
+      expect.arrayContaining([
+        "可奚为没有后退，终于打败了巨龙。",
+      ]),
+    );
   });
 
   it("pins the production photo set to eight ordered images", () => {

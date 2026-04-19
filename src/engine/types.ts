@@ -12,6 +12,11 @@ export interface SceneDefinition {
   autoAdvance: boolean;
 }
 
+export interface SubtitleCue {
+  atMs: number;
+  text: string;
+}
+
 export interface StoryEngineState {
   sceneId: SceneId;
   isPaused: boolean;
