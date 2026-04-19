@@ -1,0 +1,54 @@
+.proposal-app {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(255, 231, 214, 0.15), transparent 40%),
+    linear-gradient(180deg, #09182c 0%, #122744 48%, #2d1839 100%);
+}
+
+.stage {
+  position: relative;
+  width: min(1200px, 100vw);
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.stage__subtitle,
+.stage__proposal-line,
+.stage__prompt,
+.stage__viewport-note {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.stage__subtitle {
+  top: 72px;
+  letter-spacing: 0.08em;
+}
+
+.stage__proposal-line {
+  bottom: 160px;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.stage__prompt {
+  bottom: 90px;
+}
+
+.stage__photos {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  z-index: 3;
+}
+
+.memory-card img {
+  width: min(34vw, 360px);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
