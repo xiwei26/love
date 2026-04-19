@@ -1,6 +1,6 @@
 export function createApp(root: HTMLElement) {
   root.innerHTML = `
-    <main class="proposal-app" data-scene="opening">
+    <main class="proposal-app" data-role="app-root" data-scene="opening">
       <div class="stage" data-role="stage">
         <div class="stage__backdrop"></div>
         <div class="stage__actors"></div>

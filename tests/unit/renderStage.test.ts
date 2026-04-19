@@ -22,7 +22,9 @@ describe("renderStage", () => {
       proposalLine: "",
     });
 
-    expect(document.querySelector(".proposal-app")?.dataset.scene).toBe("chest");
+    expect(
+      (document.querySelector(".proposal-app") as HTMLElement | null)?.dataset.scene,
+    ).toBe("chest");
     expect(document.querySelector('[data-role="subtitle"]')?.textContent).toBe(
       sceneCopy.chestPrompt,
     );
