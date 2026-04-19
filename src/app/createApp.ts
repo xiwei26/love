@@ -16,8 +16,9 @@ export function createApp(root: HTMLElement) {
         </p>
       </div>
       <button class="start-overlay" data-role="start-overlay" type="button">
-        进入童话
+        点击开启音乐与童话
       </button>
+      <audio data-role="bgm" preload="auto"></audio>
     </main>
   `;
 }
