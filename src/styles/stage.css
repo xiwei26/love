@@ -1,19 +1,30 @@
 .proposal-app {
   min-height: 100vh;
   min-height: 100svh;
+  color: #fff5f0;
   background:
-    radial-gradient(circle at top, rgba(255, 231, 214, 0.15), transparent 40%),
-    linear-gradient(180deg, #09182c 0%, #122744 48%, #2d1839 100%);
+    radial-gradient(circle at top, rgba(255, 231, 214, 0.14), transparent 36%),
+    linear-gradient(180deg, #091321 0%, #112542 44%, #2a1837 100%);
 }
 
 .stage {
   position: relative;
-  width: min(1200px, 100vw);
+  width: 100%;
   min-height: 100vh;
   min-height: 100svh;
-  margin: 0 auto;
   overflow: hidden;
   isolation: isolate;
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background:
+    radial-gradient(circle at center, transparent 58%, rgba(3, 4, 12, 0.24) 100%),
+    linear-gradient(180deg, rgba(4, 8, 18, 0.12), rgba(4, 8, 18, 0.34));
 }
 
 .stage__backdrop,
@@ -58,51 +69,82 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4;
+  z-index: 6;
 }
 
 .stage__subtitle {
-  top: 72px;
-  max-width: min(88vw, 720px);
+  top: 58px;
+  max-width: min(86vw, 760px);
+  margin: 0;
+  padding: 14px 20px;
+  color: rgba(255, 244, 236, 0.94);
   letter-spacing: 0.08em;
+  line-height: 1.55;
   text-align: center;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42);
+  animation: subtitleLift 900ms ease-out;
 }
 
 .stage__proposal-line {
-  bottom: 160px;
+  bottom: 152px;
   max-width: min(90vw, 820px);
-  font-size: clamp(32px, 4vw, 40px);
+  margin: 0;
+  font-size: clamp(34px, 4vw, 58px);
   font-weight: 700;
+  line-height: 1.1;
   text-align: center;
 }
 
 .stage__prompt {
-  bottom: 90px;
+  bottom: 88px;
+  padding: 16px 32px;
+  border: 0;
+  border-radius: 999px;
+  color: #301d2d;
+  background: linear-gradient(180deg, #ffe9d9 0%, #ffd6ef 100%);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+  cursor: pointer;
+  animation: promptHalo 2.8s ease-in-out infinite;
+}
+
+.stage__viewport-note {
+  bottom: 34px;
+  max-width: min(80vw, 520px);
+  color: rgba(255, 239, 230, 0.74);
+  font-size: 14px;
+  text-align: center;
 }
 
 .start-overlay {
-  position: fixed;
-  right: 50%;
-  bottom: 48px;
+  position: absolute;
+  left: 50%;
+  bottom: 66px;
   z-index: 8;
-  padding: 16px 28px;
+  padding: 18px 34px;
   border: 0;
   border-radius: 999px;
-  color: #2d1839;
-  background: linear-gradient(180deg, #ffe7d6 0%, #ffd2e5 100%);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+  color: #321f2e;
+  background:
+    linear-gradient(180deg, rgba(255, 239, 221, 0.98) 0%, rgba(255, 210, 232, 0.95) 100%);
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.32) inset;
   cursor: pointer;
-  transform: translateX(50%);
+  transform: translateX(-50%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
 }
 
-.stage__prompt {
-  padding: 14px 28px;
-  border: 0;
-  border-radius: 999px;
-  color: #2d1839;
-  background: linear-gradient(180deg, #ffe9d9 0%, #ffd6ef 100%);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
-  cursor: pointer;
+.start-overlay:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow:
+    0 28px 52px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.38) inset;
+  filter: brightness(1.02);
 }
 
 .scene-backdrop {
@@ -113,7 +155,21 @@
 
 .scene-backdrop__sky,
 .scene-backdrop__glow,
-.scene-backdrop__ground {
+.scene-backdrop__ground,
+.scene-backdrop__mist,
+.scene-backdrop__lava,
+.scene-backdrop__platform,
+.scene-backdrop__chain,
+.scene-backdrop__cage,
+.scene-backdrop__ember,
+.scene-backdrop__dust,
+.scene-backdrop__foreground,
+.scene-backdrop__flare,
+.scene-backdrop__flame-wave,
+.scene-backdrop__impact,
+.scene-backdrop__dais,
+.scene-backdrop__pillar,
+.scene-backdrop__beam {
   position: absolute;
 }
 
@@ -122,121 +178,461 @@
 }
 
 .scene-backdrop__glow {
-  width: clamp(220px, 34vw, 520px);
+  width: clamp(280px, 34vw, 620px);
   aspect-ratio: 1;
   border-radius: 50%;
-  filter: blur(18px);
-  opacity: 0.65;
-  animation: backdropGlow 6s ease-in-out infinite;
+  filter: blur(26px);
+  opacity: 0.5;
+  animation: backdropGlow 6.8s ease-in-out infinite;
 }
 
 .scene-backdrop__glow--left {
   left: -10%;
-  top: 8%;
+  top: 4%;
 }
 
 .scene-backdrop__glow--right {
   right: -8%;
-  top: 20%;
-  animation-delay: -2s;
+  top: 16%;
+  animation-delay: -2.2s;
 }
 
 .scene-backdrop__ground {
-  left: -10%;
-  right: -10%;
+  left: -12%;
+  right: -12%;
   bottom: -18%;
-  height: 42%;
+  height: 40%;
   border-radius: 50% 50% 0 0;
+}
+
+.scene-backdrop__mist {
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.3;
+}
+
+.scene-backdrop__mist--left {
+  left: 2%;
+  top: 10%;
+  width: min(32vw, 360px);
+  height: min(22vw, 240px);
+  background: rgba(255, 218, 160, 0.18);
+}
+
+.scene-backdrop__mist--right {
+  right: 5%;
+  top: 18%;
+  width: min(28vw, 320px);
+  height: min(20vw, 220px);
+  background: rgba(214, 164, 255, 0.18);
+}
+
+.scene-backdrop__mist--crater {
+  inset: auto 10% 36% 20%;
+  height: 26%;
+  background: rgba(255, 138, 91, 0.18);
+  filter: blur(30px);
+}
+
+.scene-backdrop__mist--gold {
+  inset: auto 16% 28% 16%;
+  height: 30%;
+  background: rgba(255, 222, 167, 0.18);
+  filter: blur(34px);
+}
+
+.scene-backdrop__lava {
+  left: -8%;
+  right: -8%;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, rgba(255, 122, 52, 0.8), rgba(255, 214, 86, 0.96), rgba(255, 116, 44, 0.84)),
+    linear-gradient(180deg, rgba(255, 210, 125, 0.28), rgba(0, 0, 0, 0));
+  filter: blur(0.2px) saturate(1.1);
+  animation: lavaFlow 9s linear infinite;
+}
+
+.scene-backdrop__lava--rear {
+  bottom: 18%;
+  height: 8%;
+  opacity: 0.58;
+}
+
+.scene-backdrop__lava--front {
+  bottom: 11%;
+  height: 10%;
+  opacity: 0.92;
+}
+
+.scene-backdrop__lava--arena {
+  bottom: 12%;
+  height: 14%;
+  opacity: 0.95;
+  animation-duration: 6.4s;
+}
+
+.scene-backdrop__platform {
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(107, 86, 83, 0.96), rgba(41, 23, 24, 0.96));
+  box-shadow:
+    0 18px 24px rgba(0, 0, 0, 0.3),
+    0 -3px 0 rgba(255, 210, 167, 0.08) inset;
+}
+
+.scene-backdrop__platform--opening-left {
+  left: 10%;
+  bottom: 18%;
+  width: 24%;
+  height: 9%;
+}
+
+.scene-backdrop__platform--opening-right {
+  right: 6%;
+  bottom: 17%;
+  width: 28%;
+  height: 9%;
+}
+
+.scene-backdrop__platform--entry {
+  left: 8%;
+  bottom: 18%;
+  width: 22%;
+  height: 8%;
+}
+
+.scene-backdrop__platform--bridge {
+  left: 35%;
+  bottom: 27%;
+  width: 16%;
+  height: 5%;
+}
+
+.scene-backdrop__platform--boss {
+  right: 6%;
+  bottom: 18%;
+  width: 32%;
+  height: 10%;
+}
+
+.scene-backdrop__platform--captive {
+  right: 17%;
+  bottom: 44%;
+  width: 15%;
+  height: 5%;
+}
+
+.scene-backdrop__platform--arena-left {
+  left: 10%;
+  bottom: 20%;
+  width: 20%;
+  height: 8%;
+}
+
+.scene-backdrop__platform--arena-center {
+  left: 36%;
+  bottom: 17%;
+  width: 30%;
+  height: 11%;
+}
+
+.scene-backdrop__chain {
+  top: 5%;
+  width: 2px;
+  height: 42%;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 214, 131, 0.3) 0 10px,
+      rgba(65, 37, 17, 0.7) 10px 18px
+    );
+  opacity: 0.76;
+}
+
+.scene-backdrop__chain--left {
+  right: 23%;
+}
+
+.scene-backdrop__chain--right {
+  right: 15%;
+}
+
+.scene-backdrop__cage {
+  right: 12%;
+  bottom: 34%;
+  width: 24%;
+  height: 30%;
+  border-radius: 26px;
+  border: 2px solid rgba(255, 190, 126, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 176, 122, 0.1), rgba(255, 84, 42, 0.05)),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 10%,
+      rgba(255, 219, 157, 0.18) 10% 12%,
+      transparent 12% 22%
+    );
+  box-shadow:
+    0 0 28px rgba(255, 133, 64, 0.18),
+    0 0 0 1px rgba(255, 233, 207, 0.06) inset;
+}
+
+.scene-backdrop__cage--fracture {
+  animation: cageRelease 14s ease-out forwards;
+}
+
+.scene-backdrop__ember,
+.scene-backdrop__dust {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  filter: blur(0.4px);
+}
+
+.scene-backdrop__ember {
+  background: radial-gradient(circle, rgba(255, 220, 129, 1) 0%, rgba(255, 117, 48, 0) 70%);
+  animation: emberFloat 4.8s linear infinite;
+}
+
+.scene-backdrop__ember--1 {
+  left: 18%;
+  bottom: 18%;
+}
+
+.scene-backdrop__ember--2 {
+  left: 34%;
+  bottom: 28%;
+  animation-delay: -1.1s;
+}
+
+.scene-backdrop__ember--3 {
+  right: 28%;
+  bottom: 20%;
+  animation-delay: -2.2s;
+}
+
+.scene-backdrop__ember--4 {
+  right: 12%;
+  bottom: 32%;
+  animation-delay: -3.3s;
+}
+
+.scene-backdrop__dust {
+  background: radial-gradient(circle, rgba(255, 244, 236, 0.72) 0%, rgba(255, 244, 236, 0) 70%);
+  animation: dustFloat 6.2s linear infinite;
+}
+
+.scene-backdrop__dust--1 {
+  left: 24%;
+  top: 22%;
+}
+
+.scene-backdrop__dust--2 {
+  right: 22%;
+  top: 28%;
+  animation-delay: -2.8s;
+}
+
+.scene-backdrop__foreground {
+  top: -2%;
+  bottom: -6%;
+  width: 24%;
+  background:
+    linear-gradient(180deg, rgba(19, 16, 29, 0.94), rgba(4, 4, 10, 0.98));
+  filter: blur(0.3px);
+}
+
+.scene-backdrop__foreground--left {
+  left: -10%;
+  clip-path: polygon(0 0, 68% 0, 92% 16%, 70% 56%, 100% 100%, 0 100%);
+}
+
+.scene-backdrop__foreground--right {
+  right: -10%;
+  clip-path: polygon(32% 0, 100% 0, 100% 100%, 0 100%, 28% 58%, 8% 18%);
+}
+
+.scene-backdrop__flare {
+  inset: 9% 30% auto 44%;
+  height: 24%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 169, 98, 0.5) 0%, rgba(255, 169, 98, 0) 72%);
+  filter: blur(12px);
+}
+
+.scene-backdrop__flame-wave {
+  left: 44%;
+  bottom: 19%;
+  width: 22%;
+  height: 18%;
+  border-radius: 50% 46% 48% 52%;
+  background:
+    radial-gradient(circle at 30% 64%, rgba(255, 231, 147, 0.95) 0 12%, rgba(255, 150, 70, 0.8) 13% 36%, rgba(255, 79, 40, 0) 62%);
+  transform-origin: left bottom;
+  animation: flameSweep 14s ease-in-out infinite;
+}
+
+.scene-backdrop__impact {
+  left: 48%;
+  top: 28%;
+  width: 20%;
+  height: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 245, 201, 0.82) 0%, rgba(255, 245, 201, 0) 72%);
+  opacity: 0;
+  filter: blur(10px);
+  animation: impactFlash 14s ease-in-out infinite;
+}
+
+.scene-backdrop__dais {
+  left: 50%;
+  bottom: 13%;
+  width: min(40vw, 480px);
+  height: 12%;
+  border-radius: 50% 50% 20% 20%;
+  background:
+    linear-gradient(180deg, rgba(128, 90, 99, 0.94), rgba(54, 30, 43, 0.98));
+  transform: translateX(-50%);
+  box-shadow:
+    0 22px 40px rgba(0, 0, 0, 0.22),
+    0 -4px 0 rgba(255, 226, 190, 0.12) inset;
+}
+
+.scene-backdrop__dais--proposal {
+  width: min(48vw, 560px);
+  height: 16%;
+  bottom: 10%;
+}
+
+.scene-backdrop__pillar {
+  bottom: 8%;
+  width: min(8vw, 90px);
+  height: 38%;
+  border-radius: 22px 22px 0 0;
+  background:
+    linear-gradient(180deg, rgba(98, 87, 117, 0.86), rgba(43, 27, 52, 0.96));
+  opacity: 0.62;
+}
+
+.scene-backdrop__pillar--left {
+  left: 14%;
+}
+
+.scene-backdrop__pillar--right {
+  right: 14%;
+}
+
+.scene-backdrop__beam {
+  bottom: 18%;
+  width: min(14vw, 170px);
+  height: 58%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 240, 203, 0.3), rgba(255, 176, 197, 0));
+  filter: blur(6px);
+  mix-blend-mode: screen;
+}
+
+.scene-backdrop__beam--left {
+  left: 30%;
+}
+
+.scene-backdrop__beam--center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.scene-backdrop__beam--right {
+  right: 30%;
 }
 
 .scene-backdrop--opening .scene-backdrop__sky {
   background:
-    radial-gradient(circle at 50% 8%, rgba(255, 241, 181, 0.22), transparent 28%),
-    linear-gradient(180deg, #183454 0%, #254b6d 48%, #4b2957 100%);
+    radial-gradient(circle at 50% 8%, rgba(255, 244, 196, 0.18), transparent 26%),
+    linear-gradient(180deg, #183759 0%, #264f73 48%, #4a2b5f 100%);
 }
 
 .scene-backdrop--opening .scene-backdrop__glow--left {
-  background: rgba(255, 198, 123, 0.68);
+  background: rgba(255, 206, 145, 0.5);
 }
 
 .scene-backdrop--opening .scene-backdrop__glow--right {
-  background: rgba(255, 160, 210, 0.52);
+  background: rgba(214, 163, 255, 0.4);
 }
 
 .scene-backdrop--opening .scene-backdrop__ground {
-  background: linear-gradient(180deg, rgba(95, 48, 102, 0.9) 0%, rgba(26, 16, 45, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(100, 50, 110, 0.88) 0%, rgba(30, 17, 46, 0.98) 100%);
 }
 
 .scene-backdrop--dragon .scene-backdrop__sky {
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 146, 77, 0.18), transparent 26%),
-    linear-gradient(180deg, #140e1f 0%, #3f1b24 52%, #17060b 100%);
+    radial-gradient(circle at 48% 0%, rgba(255, 168, 112, 0.18), transparent 20%),
+    linear-gradient(180deg, #120b13 0%, #381619 50%, #160508 100%);
 }
 
 .scene-backdrop--dragon .scene-backdrop__glow--left {
-  background: rgba(255, 124, 74, 0.82);
+  background: rgba(255, 112, 69, 0.4);
 }
 
 .scene-backdrop--dragon .scene-backdrop__glow--right {
-  background: rgba(154, 34, 62, 0.54);
+  background: rgba(255, 193, 97, 0.36);
 }
 
 .scene-backdrop--dragon .scene-backdrop__ground {
-  background: linear-gradient(180deg, rgba(61, 17, 8, 0.95) 0%, rgba(16, 6, 9, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(73, 29, 18, 0.88) 0%, rgba(18, 8, 11, 0.98) 100%);
 }
 
 .scene-backdrop--rescue .scene-backdrop__sky {
   background:
-    radial-gradient(circle at 50% 4%, rgba(255, 232, 163, 0.26), transparent 30%),
-    linear-gradient(180deg, #25496d 0%, #4d6c89 46%, #8f556a 100%);
+    radial-gradient(circle at 50% 4%, rgba(255, 212, 146, 0.2), transparent 24%),
+    linear-gradient(180deg, #26111a 0%, #6a241c 44%, #160409 100%);
 }
 
 .scene-backdrop--rescue .scene-backdrop__glow--left {
-  background: rgba(255, 211, 141, 0.74);
+  background: rgba(255, 134, 79, 0.56);
 }
 
 .scene-backdrop--rescue .scene-backdrop__glow--right {
-  background: rgba(255, 173, 189, 0.5);
+  background: rgba(255, 219, 123, 0.42);
 }
 
 .scene-backdrop--rescue .scene-backdrop__ground {
-  background: linear-gradient(180deg, rgba(115, 77, 63, 0.92) 0%, rgba(39, 22, 27, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(95, 46, 27, 0.92) 0%, rgba(26, 10, 11, 0.98) 100%);
 }
 
 .scene-backdrop--chest .scene-backdrop__sky {
   background:
-    radial-gradient(circle at 50% 10%, rgba(253, 241, 177, 0.24), transparent 30%),
-    linear-gradient(180deg, #10223a 0%, #214257 45%, #3f2a4d 100%);
+    radial-gradient(circle at 50% 10%, rgba(254, 244, 188, 0.18), transparent 24%),
+    linear-gradient(180deg, #10243c 0%, #27495f 44%, #483051 100%);
 }
 
 .scene-backdrop--chest .scene-backdrop__glow--left {
-  background: rgba(123, 216, 214, 0.52);
+  background: rgba(132, 203, 255, 0.28);
 }
 
 .scene-backdrop--chest .scene-backdrop__glow--right {
-  background: rgba(255, 204, 122, 0.6);
+  background: rgba(255, 216, 144, 0.3);
 }
 
 .scene-backdrop--chest .scene-backdrop__ground {
-  background: linear-gradient(180deg, rgba(72, 53, 74, 0.9) 0%, rgba(23, 15, 37, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(76, 54, 84, 0.9) 0%, rgba(24, 16, 34, 0.98) 100%);
 }
 
 .scene-backdrop--proposal .scene-backdrop__sky {
   background:
-    radial-gradient(circle at 50% 6%, rgba(255, 236, 188, 0.26), transparent 32%),
-    linear-gradient(180deg, #1b3553 0%, #5e597f 45%, #8b4d65 100%);
+    radial-gradient(circle at 50% 5%, rgba(255, 240, 201, 0.2), transparent 24%),
+    linear-gradient(180deg, #1d3354 0%, #5b5b87 44%, #8d4b64 100%);
 }
 
 .scene-backdrop--proposal .scene-backdrop__glow--left {
-  background: rgba(255, 208, 150, 0.68);
+  background: rgba(255, 214, 163, 0.38);
 }
 
 .scene-backdrop--proposal .scene-backdrop__glow--right {
-  background: rgba(255, 166, 196, 0.54);
+  background: rgba(255, 176, 205, 0.38);
 }
 
 .scene-backdrop--proposal .scene-backdrop__ground {
-  background: linear-gradient(180deg, rgba(117, 61, 89, 0.92) 0%, rgba(36, 17, 31, 0.98) 100%);
+  background: linear-gradient(180deg, rgba(120, 63, 91, 0.92) 0%, rgba(36, 16, 29, 0.98) 100%);
 }
 
 .stage-sprite {
@@ -245,130 +641,146 @@
   height: auto;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 28px 42px rgba(0, 0, 0, 0.32));
+  image-rendering: pixelated;
+  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.36));
 }
 
 .stage-sprite--opening-girl {
-  left: 10%;
-  bottom: 10%;
-  width: clamp(160px, 20vw, 250px);
+  left: 12%;
+  bottom: 12%;
+  width: clamp(180px, 17vw, 260px);
+  animation: idleFloat 3.4s ease-in-out infinite;
 }
 
 .stage-sprite--opening-boy {
-  right: 8%;
-  bottom: 8%;
-  width: clamp(170px, 22vw, 290px);
+  right: 12%;
+  bottom: 12%;
+  width: clamp(185px, 19vw, 280px);
+  animation: heroAdvanceGentle 7.8s ease-in-out infinite;
 }
 
 .stage-sprite--opening-heart,
-.stage-sprite--rescue-heart,
 .stage-sprite--chest-heart,
 .stage-sprite--proposal-heart,
 .stage-sprite--proposal-ring {
   left: 50%;
+  transform: translateX(-50%);
   animation: stagePulseCenter 3.8s ease-in-out infinite;
 }
 
 .stage-sprite--opening-heart {
-  top: 18%;
-  width: clamp(72px, 8vw, 118px);
+  top: 17%;
+  width: clamp(78px, 7vw, 118px);
 }
 
 .stage-sprite--dragon-girl {
-  left: 8%;
-  bottom: 10%;
-  width: clamp(160px, 19vw, 245px);
+  right: 18%;
+  bottom: 46%;
+  width: clamp(138px, 14vw, 205px);
+  animation: captiveHover 2.8s ease-in-out infinite;
 }
 
 .stage-sprite--dragon-boy {
-  right: 9%;
-  bottom: 9%;
-  width: clamp(175px, 22vw, 295px);
+  left: 8%;
+  bottom: 18%;
+  width: clamp(170px, 17vw, 250px);
+  animation: dragonHeroAdvance 11s ease-in-out infinite;
 }
 
 .stage-sprite--dragon-dragon {
-  left: 50%;
-  top: 11%;
-  width: clamp(250px, 36vw, 440px);
-  transform: translateX(-50%);
+  right: 1%;
+  top: 8%;
+  width: clamp(260px, 28vw, 420px);
+  transform-origin: 80% 72%;
+  animation: dragonBrood 6.4s ease-in-out infinite;
 }
 
 .stage-sprite--rescue-boy {
   left: 14%;
-  bottom: 9%;
-  width: clamp(175px, 22vw, 295px);
+  bottom: 20%;
+  width: clamp(178px, 18vw, 255px);
+  animation: rescueHeroClash 14s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
 }
 
 .stage-sprite--rescue-girl {
-  right: 12%;
-  bottom: 8%;
-  width: clamp(180px, 22vw, 280px);
+  right: 17%;
+  bottom: 44%;
+  width: clamp(150px, 15vw, 220px);
+  animation: rescueGirlRelease 14s ease-in-out infinite;
 }
 
 .stage-sprite--rescue-dragon {
-  right: 2%;
-  top: 10%;
-  width: clamp(180px, 23vw, 310px);
-  opacity: 0.34;
-  filter: brightness(0.65) saturate(0.85) drop-shadow(0 28px 42px rgba(0, 0, 0, 0.32));
+  right: 4%;
+  top: 8%;
+  width: clamp(270px, 29vw, 430px);
+  transform-origin: 72% 72%;
+  animation: rescueDragonClash 14s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
 }
 
 .stage-sprite--rescue-heart {
   top: 16%;
-  width: clamp(82px, 9vw, 124px);
+  width: clamp(82px, 7.5vw, 122px);
+  opacity: 0;
+  animation: rescueHeartReturn 14s ease-in-out infinite;
 }
 
 .stage-sprite--chest-girl {
-  left: 8%;
-  bottom: 10%;
-  width: clamp(160px, 19vw, 245px);
+  left: 18%;
+  bottom: 14%;
+  width: clamp(170px, 17vw, 245px);
+  animation: calmBob 4.4s ease-in-out infinite;
 }
 
 .stage-sprite--chest-boy {
-  right: 7%;
-  bottom: 9%;
-  width: clamp(175px, 22vw, 295px);
+  right: 17%;
+  bottom: 14%;
+  width: clamp(178px, 18vw, 258px);
+  animation: calmBob 4.4s ease-in-out infinite -2.2s;
 }
 
 .stage-sprite--chest-box {
   left: 50%;
-  bottom: 11%;
-  width: clamp(210px, 25vw, 340px);
+  bottom: 14%;
+  width: clamp(220px, 23vw, 340px);
   transform: translateX(-50%);
+  animation: chestShimmer 3.6s ease-in-out infinite;
 }
 
 .stage-sprite--chest-heart {
-  top: 20%;
-  width: clamp(86px, 9vw, 128px);
+  top: 18%;
+  width: clamp(92px, 8vw, 130px);
 }
 
 .stage-sprite--proposal-boy {
-  left: 17%;
-  bottom: 8%;
-  width: clamp(165px, 20vw, 255px);
+  left: 18%;
+  bottom: 11%;
+  width: clamp(170px, 18vw, 255px);
+  animation: proposalSettle 2.8s ease-out;
 }
 
 .stage-sprite--proposal-girl {
-  right: 13%;
-  bottom: 8%;
-  width: clamp(190px, 22vw, 290px);
+  right: 16%;
+  bottom: 12%;
+  width: clamp(176px, 18vw, 260px);
+  animation: calmBob 4.2s ease-in-out infinite;
 }
 
 .stage-sprite--proposal-chest {
   left: 50%;
-  bottom: 9%;
-  width: clamp(230px, 27vw, 360px);
+  bottom: 11%;
+  width: clamp(240px, 24vw, 360px);
   transform: translateX(-50%);
 }
 
 .stage-sprite--proposal-ring {
-  top: 26%;
-  width: clamp(62px, 6.5vw, 100px);
+  top: 25%;
+  width: clamp(68px, 6vw, 100px);
+  animation-duration: 2.8s;
 }
 
 .stage-sprite--proposal-heart {
-  top: 14%;
-  width: clamp(78px, 8vw, 120px);
+  top: 13%;
+  width: clamp(84px, 7vw, 120px);
 }
 
 .memory-card {
@@ -376,7 +788,7 @@
   justify-self: center;
   padding: 10px;
   border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 214, 239, 0.08));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 214, 239, 0.1));
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
   transform: rotate(calc((var(--memory-index) - 3.5) * 1.4deg));
 }
@@ -390,18 +802,314 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
+.proposal-app[data-scene="dragon"] .stage__subtitle,
+.proposal-app[data-scene="rescue"] .stage__subtitle {
+  color: rgba(255, 240, 228, 0.96);
+}
+
 .proposal-app[data-scene="proposal"] .stage__proposal-line {
-  text-shadow: 0 0 18px rgba(255, 223, 173, 0.65);
+  text-shadow:
+    0 0 18px rgba(255, 223, 173, 0.65),
+    0 8px 34px rgba(0, 0, 0, 0.34);
+  animation: proposalGlow 2.4s ease-in-out infinite;
 }
 
 @keyframes backdropGlow {
   0%,
   100% {
-    opacity: 0.45;
+    opacity: 0.38;
+    transform: scale(0.96);
   }
 
   50% {
-    opacity: 0.78;
+    opacity: 0.72;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes subtitleLift {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes emberFloat {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateY(-170px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes dustFloat {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translateY(-90px);
+    opacity: 0;
+  }
+}
+
+@keyframes lavaFlow {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: 220px 0, 0 0;
+  }
+}
+
+@keyframes idleFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes calmBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes heroAdvanceGentle {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+
+  45% {
+    transform: translateX(-18px) translateY(-3px);
+  }
+
+  70% {
+    transform: translateX(12px) translateY(0);
+  }
+}
+
+@keyframes dragonHeroAdvance {
+  0%,
+  12% {
+    transform: translateX(0) translateY(0);
+  }
+
+  38% {
+    transform: translateX(90px) translateY(-26px);
+  }
+
+  62% {
+    transform: translateX(150px) translateY(8px);
+  }
+
+  100% {
+    transform: translateX(220px) translateY(-14px);
+  }
+}
+
+@keyframes captiveHover {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes dragonBrood {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-8px) scale(1.03);
+  }
+}
+
+@keyframes rescueHeroClash {
+  0%,
+  18% {
+    transform: translateX(0) translateY(0);
+  }
+
+  34% {
+    transform: translateX(130px) translateY(-16px);
+  }
+
+  44% {
+    transform: translateX(56px) translateY(8px);
+  }
+
+  64% {
+    transform: translateX(178px) translateY(-10px);
+  }
+
+  78%,
+  100% {
+    transform: translateX(220px) translateY(-2px);
+  }
+}
+
+@keyframes rescueDragonClash {
+  0%,
+  24% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+
+  36% {
+    transform: translateX(-44px) scale(1.04);
+    opacity: 1;
+  }
+
+  54% {
+    transform: translateX(16px) scale(0.98);
+    opacity: 0.98;
+  }
+
+  74% {
+    transform: translateX(78px) scale(0.9);
+    opacity: 0.36;
+  }
+
+  100% {
+    transform: translateX(100px) scale(0.84);
+    opacity: 0.14;
+  }
+}
+
+@keyframes rescueGirlRelease {
+  0%,
+  58% {
+    transform: translateY(0);
+  }
+
+  72% {
+    transform: translate(-36px, 88px);
+  }
+
+  100% {
+    transform: translate(-44px, 96px);
+  }
+}
+
+@keyframes rescueHeartReturn {
+  0%,
+  60% {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.7);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -10px) scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes flameSweep {
+  0%,
+  22%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-10deg);
+  }
+
+  32% {
+    opacity: 0.9;
+    transform: scale(1) rotate(6deg);
+  }
+
+  50% {
+    opacity: 0.18;
+    transform: scale(1.25) rotate(12deg);
+  }
+}
+
+@keyframes impactFlash {
+  0%,
+  56%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  66% {
+    opacity: 0.9;
+    transform: scale(1.25);
+  }
+
+  76% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes cageRelease {
+  0%,
+  55% {
+    opacity: 0.94;
+    transform: scale(1);
+  }
+
+  72% {
+    opacity: 0.34;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes chestShimmer {
+  0%,
+  100% {
+    filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.36));
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 24px 36px rgba(0, 0, 0, 0.28))
+      drop-shadow(0 0 24px rgba(255, 210, 148, 0.46));
   }
 }
 
@@ -412,24 +1120,69 @@
   }
 
   50% {
-    transform: translateX(-50%) translateY(-10px) scale(1.06);
+    transform: translateX(-50%) translateY(-10px) scale(1.08);
+  }
+}
+
+@keyframes promptHalo {
+  0%,
+  100% {
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.28),
+      0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+  }
+
+  50% {
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.32),
+      0 0 0 1px rgba(255, 255, 255, 0.34) inset,
+      0 0 0 12px rgba(255, 220, 198, 0.08);
+  }
+}
+
+@keyframes proposalSettle {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes proposalGlow {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.02);
   }
 }
 
 @media (max-width: 900px) {
   .stage__subtitle {
-    top: 36px;
+    top: 34px;
     font-size: 15px;
+    padding: 12px 16px;
   }
 
   .stage__proposal-line {
-    bottom: 124px;
+    bottom: 118px;
     padding: 0 16px;
   }
 
   .stage__prompt {
-    bottom: 58px;
-    padding: 12px 20px;
+    bottom: 54px;
+    padding: 12px 22px;
+  }
+
+  .start-overlay {
+    bottom: 48px;
+    padding: 14px 24px;
   }
 
   .stage__photos {
@@ -438,36 +1191,49 @@
     padding: 120px 20px 190px;
   }
 
-  .stage-sprite--opening-girl,
-  .stage-sprite--dragon-girl,
-  .stage-sprite--chest-girl {
-    left: 2%;
-    width: min(35vw, 210px);
+  .scene-backdrop__foreground {
+    width: 30%;
   }
 
-  .stage-sprite--opening-boy,
+  .scene-backdrop__platform--captive {
+    right: 10%;
+    width: 22%;
+  }
+
+  .scene-backdrop__cage {
+    right: 2%;
+    width: 36%;
+  }
+
+  .stage-sprite--opening-girl,
   .stage-sprite--dragon-boy,
   .stage-sprite--rescue-boy,
-  .stage-sprite--chest-boy {
-    right: 2%;
-    width: min(40vw, 240px);
-  }
-
-  .stage-sprite--dragon-dragon,
-  .stage-sprite--chest-box,
-  .stage-sprite--proposal-chest {
-    width: min(62vw, 320px);
-  }
-
-  .stage-sprite--rescue-girl,
-  .stage-sprite--proposal-girl {
-    right: 1%;
+  .stage-sprite--chest-girl,
+  .stage-sprite--proposal-boy {
     width: min(38vw, 220px);
   }
 
-  .stage-sprite--proposal-boy {
-    left: 4%;
-    width: min(34vw, 190px);
+  .stage-sprite--opening-boy,
+  .stage-sprite--dragon-dragon,
+  .stage-sprite--rescue-dragon,
+  .stage-sprite--chest-boy,
+  .stage-sprite--proposal-girl {
+    width: min(42vw, 260px);
+  }
+
+  .stage-sprite--dragon-girl,
+  .stage-sprite--rescue-girl {
+    width: min(26vw, 170px);
+  }
+
+  .stage-sprite--dragon-girl,
+  .stage-sprite--rescue-girl {
+    right: 10%;
+  }
+
+  .stage-sprite--proposal-chest,
+  .stage-sprite--chest-box {
+    width: min(56vw, 310px);
   }
 
   .memory-card {

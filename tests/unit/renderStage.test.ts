@@ -53,6 +53,10 @@ describe("renderStage", () => {
           assetManifest.sprites.boyRun,
           assetManifest.sprites.heart,
         ],
+        expectedBackdropSelectors: [
+          ".scene-backdrop__platform--opening-left",
+          ".scene-backdrop__mist--left",
+        ],
       },
       {
         sceneId: "dragon" as const,
@@ -61,6 +65,11 @@ describe("renderStage", () => {
           assetManifest.sprites.girlIdle,
           assetManifest.sprites.boyRun,
           assetManifest.sprites.dragon,
+        ],
+        expectedBackdropSelectors: [
+          ".scene-backdrop__lava--front",
+          ".scene-backdrop__platform--captive",
+          ".scene-backdrop__cage",
         ],
       },
       {
@@ -71,6 +80,11 @@ describe("renderStage", () => {
           assetManifest.sprites.boyRun,
           assetManifest.sprites.dragon,
         ],
+        expectedBackdropSelectors: [
+          ".scene-backdrop__lava--arena",
+          ".scene-backdrop__flame-wave",
+          ".scene-backdrop__impact",
+        ],
       },
       {
         sceneId: "chest" as const,
@@ -79,6 +93,10 @@ describe("renderStage", () => {
           assetManifest.sprites.girlIdle,
           assetManifest.sprites.boyRun,
           assetManifest.sprites.chestClosed,
+        ],
+        expectedBackdropSelectors: [
+          ".scene-backdrop__dais--chest",
+          ".scene-backdrop__pillar--left",
         ],
       },
       {
@@ -89,6 +107,10 @@ describe("renderStage", () => {
           assetManifest.sprites.boyKneel,
           assetManifest.sprites.chestOpen,
           assetManifest.sprites.ring,
+        ],
+        expectedBackdropSelectors: [
+          ".scene-backdrop__dais--proposal",
+          ".scene-backdrop__beam--center",
         ],
       },
     ];
@@ -108,6 +130,10 @@ describe("renderStage", () => {
 
       expect(sceneSprites).toEqual(expect.arrayContaining(spriteScene.expectedSprites));
       expect(document.querySelector(".stage__backdrop")?.children.length).toBeGreaterThan(0);
+
+      spriteScene.expectedBackdropSelectors.forEach((selector) => {
+        expect(document.querySelector(selector)).not.toBeNull();
+      });
     }
 
     renderStage(appRoot, {

@@ -46,12 +46,12 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   dragon: {
     actors: [
       {
-        alt: "Waiting heroine",
+        alt: "Captured heroine",
         className: "stage-sprite--dragon-girl",
         src: assetManifest.sprites.girlIdle,
       },
       {
-        alt: "Running hero",
+        alt: "Approaching hero",
         className: "stage-sprite--dragon-boy",
         src: assetManifest.sprites.boyRun,
       },
@@ -66,24 +66,24 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   rescue: {
     actors: [
       {
-        alt: "Running hero",
+        alt: "Charging hero",
         className: "stage-sprite--rescue-boy",
         src: assetManifest.sprites.boyRun,
       },
       {
-        alt: "Rescued heroine",
+        alt: "Freed heroine",
         className: "stage-sprite--rescue-girl",
         src: assetManifest.sprites.girlRescued,
       },
       {
-        alt: "Retreating dragon",
+        alt: "Reeling dragon",
         className: "stage-sprite--rescue-dragon",
         src: assetManifest.sprites.dragon,
       },
     ],
     effects: [
       {
-        alt: "Floating heart",
+        alt: "Returning heart",
         className: "stage-sprite--rescue-heart",
         src: assetManifest.sprites.heart,
       },
@@ -97,7 +97,7 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
         src: assetManifest.sprites.girlIdle,
       },
       {
-        alt: "Running hero",
+        alt: "Waiting hero",
         className: "stage-sprite--chest-boy",
         src: assetManifest.sprites.boyRun,
       },
@@ -109,7 +109,7 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
     ],
     effects: [
       {
-        alt: "Floating heart",
+        alt: "Guiding heart",
         className: "stage-sprite--chest-heart",
         src: assetManifest.sprites.heart,
       },
@@ -123,7 +123,7 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
         src: assetManifest.sprites.boyKneel,
       },
       {
-        alt: "Rescued heroine",
+        alt: "Beloved heroine",
         className: "stage-sprite--proposal-girl",
         src: assetManifest.sprites.girlRescued,
       },
@@ -148,6 +148,82 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   },
 };
 
+function renderSharedAtmosphere(sceneId: Exclude<SceneId, "memory">) {
+  const embers =
+    sceneId === "dragon" || sceneId === "rescue"
+      ? `
+          <span class="scene-backdrop__ember scene-backdrop__ember--1"></span>
+          <span class="scene-backdrop__ember scene-backdrop__ember--2"></span>
+          <span class="scene-backdrop__ember scene-backdrop__ember--3"></span>
+          <span class="scene-backdrop__ember scene-backdrop__ember--4"></span>
+        `
+      : `
+          <span class="scene-backdrop__dust scene-backdrop__dust--1"></span>
+          <span class="scene-backdrop__dust scene-backdrop__dust--2"></span>
+        `;
+
+  return `
+    <span class="scene-backdrop__glow scene-backdrop__glow--left"></span>
+    <span class="scene-backdrop__glow scene-backdrop__glow--right"></span>
+    ${embers}
+  `;
+}
+
+function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
+  switch (sceneId) {
+    case "opening":
+      return `
+        <span class="scene-backdrop__mist scene-backdrop__mist--left"></span>
+        <span class="scene-backdrop__mist scene-backdrop__mist--right"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--opening-left"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--opening-right"></span>
+      `;
+    case "dragon":
+      return `
+        <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
+        <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
+        <span class="scene-backdrop__lava scene-backdrop__lava--front"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--entry"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--bridge"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--boss"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--captive"></span>
+        <span class="scene-backdrop__chain scene-backdrop__chain--left"></span>
+        <span class="scene-backdrop__chain scene-backdrop__chain--right"></span>
+        <span class="scene-backdrop__cage"></span>
+        <span class="scene-backdrop__flare scene-backdrop__flare--dragon"></span>
+      `;
+    case "rescue":
+      return `
+        <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
+        <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
+        <span class="scene-backdrop__lava scene-backdrop__lava--arena"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--arena-left"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--arena-center"></span>
+        <span class="scene-backdrop__platform scene-backdrop__platform--captive"></span>
+        <span class="scene-backdrop__chain scene-backdrop__chain--left"></span>
+        <span class="scene-backdrop__chain scene-backdrop__chain--right"></span>
+        <span class="scene-backdrop__cage scene-backdrop__cage--fracture"></span>
+        <span class="scene-backdrop__flame-wave"></span>
+        <span class="scene-backdrop__impact"></span>
+      `;
+    case "chest":
+      return `
+        <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
+        <span class="scene-backdrop__dais scene-backdrop__dais--chest"></span>
+        <span class="scene-backdrop__pillar scene-backdrop__pillar--left"></span>
+        <span class="scene-backdrop__pillar scene-backdrop__pillar--right"></span>
+      `;
+    case "proposal":
+      return `
+        <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
+        <span class="scene-backdrop__dais scene-backdrop__dais--proposal"></span>
+        <span class="scene-backdrop__beam scene-backdrop__beam--left"></span>
+        <span class="scene-backdrop__beam scene-backdrop__beam--center"></span>
+        <span class="scene-backdrop__beam scene-backdrop__beam--right"></span>
+      `;
+  }
+}
+
 function renderBackdrop(sceneId: SceneId) {
   if (sceneId === "memory") {
     return "";
@@ -156,9 +232,11 @@ function renderBackdrop(sceneId: SceneId) {
   return `
     <div class="scene-backdrop scene-backdrop--${sceneId}" aria-hidden="true">
       <span class="scene-backdrop__sky"></span>
-      <span class="scene-backdrop__glow scene-backdrop__glow--left"></span>
-      <span class="scene-backdrop__glow scene-backdrop__glow--right"></span>
+      ${renderSharedAtmosphere(sceneId)}
+      ${renderSceneArchitecture(sceneId)}
       <span class="scene-backdrop__ground"></span>
+      <span class="scene-backdrop__foreground scene-backdrop__foreground--left"></span>
+      <span class="scene-backdrop__foreground scene-backdrop__foreground--right"></span>
     </div>
   `;
 }
