@@ -1,5 +1,6 @@
 .proposal-app {
   min-height: 100vh;
+  min-height: 100svh;
   background:
     radial-gradient(circle at top, rgba(255, 231, 214, 0.15), transparent 40%),
     linear-gradient(180deg, #09182c 0%, #122744 48%, #2d1839 100%);
@@ -9,8 +10,45 @@
   position: relative;
   width: min(1200px, 100vw);
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0 auto;
   overflow: hidden;
+  isolation: isolate;
+}
+
+.stage__backdrop,
+.stage__actors,
+.stage__effects,
+.stage__photos {
+  position: absolute;
+  inset: 0;
+}
+
+.stage__backdrop,
+.stage__actors,
+.stage__effects {
+  pointer-events: none;
+}
+
+.stage__backdrop {
+  z-index: 0;
+}
+
+.stage__actors {
+  z-index: 1;
+}
+
+.stage__effects {
+  z-index: 2;
+}
+
+.stage__photos {
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  place-content: center;
+  padding: 148px 48px 240px;
 }
 
 .stage__subtitle,
@@ -25,30 +63,414 @@
 
 .stage__subtitle {
   top: 72px;
+  max-width: min(88vw, 720px);
   letter-spacing: 0.08em;
+  text-align: center;
 }
 
 .stage__proposal-line {
   bottom: 160px;
-  font-size: 40px;
+  max-width: min(90vw, 820px);
+  font-size: clamp(32px, 4vw, 40px);
   font-weight: 700;
+  text-align: center;
 }
 
 .stage__prompt {
   bottom: 90px;
 }
 
-.stage__photos {
+.start-overlay {
+  position: fixed;
+  right: 50%;
+  bottom: 48px;
+  z-index: 8;
+  padding: 16px 28px;
+  border: 0;
+  border-radius: 999px;
+  color: #2d1839;
+  background: linear-gradient(180deg, #ffe7d6 0%, #ffd2e5 100%);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transform: translateX(50%);
+}
+
+.stage__prompt {
+  padding: 14px 28px;
+  border: 0;
+  border-radius: 999px;
+  color: #2d1839;
+  background: linear-gradient(180deg, #ffe9d9 0%, #ffd6ef 100%);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.scene-backdrop {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  gap: 16px;
-  z-index: 3;
+  overflow: hidden;
+}
+
+.scene-backdrop__sky,
+.scene-backdrop__glow,
+.scene-backdrop__ground {
+  position: absolute;
+}
+
+.scene-backdrop__sky {
+  inset: 0;
+}
+
+.scene-backdrop__glow {
+  width: clamp(220px, 34vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.65;
+  animation: backdropGlow 6s ease-in-out infinite;
+}
+
+.scene-backdrop__glow--left {
+  left: -10%;
+  top: 8%;
+}
+
+.scene-backdrop__glow--right {
+  right: -8%;
+  top: 20%;
+  animation-delay: -2s;
+}
+
+.scene-backdrop__ground {
+  left: -10%;
+  right: -10%;
+  bottom: -18%;
+  height: 42%;
+  border-radius: 50% 50% 0 0;
+}
+
+.scene-backdrop--opening .scene-backdrop__sky {
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 241, 181, 0.22), transparent 28%),
+    linear-gradient(180deg, #183454 0%, #254b6d 48%, #4b2957 100%);
+}
+
+.scene-backdrop--opening .scene-backdrop__glow--left {
+  background: rgba(255, 198, 123, 0.68);
+}
+
+.scene-backdrop--opening .scene-backdrop__glow--right {
+  background: rgba(255, 160, 210, 0.52);
+}
+
+.scene-backdrop--opening .scene-backdrop__ground {
+  background: linear-gradient(180deg, rgba(95, 48, 102, 0.9) 0%, rgba(26, 16, 45, 0.98) 100%);
+}
+
+.scene-backdrop--dragon .scene-backdrop__sky {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 146, 77, 0.18), transparent 26%),
+    linear-gradient(180deg, #140e1f 0%, #3f1b24 52%, #17060b 100%);
+}
+
+.scene-backdrop--dragon .scene-backdrop__glow--left {
+  background: rgba(255, 124, 74, 0.82);
+}
+
+.scene-backdrop--dragon .scene-backdrop__glow--right {
+  background: rgba(154, 34, 62, 0.54);
+}
+
+.scene-backdrop--dragon .scene-backdrop__ground {
+  background: linear-gradient(180deg, rgba(61, 17, 8, 0.95) 0%, rgba(16, 6, 9, 0.98) 100%);
+}
+
+.scene-backdrop--rescue .scene-backdrop__sky {
+  background:
+    radial-gradient(circle at 50% 4%, rgba(255, 232, 163, 0.26), transparent 30%),
+    linear-gradient(180deg, #25496d 0%, #4d6c89 46%, #8f556a 100%);
+}
+
+.scene-backdrop--rescue .scene-backdrop__glow--left {
+  background: rgba(255, 211, 141, 0.74);
+}
+
+.scene-backdrop--rescue .scene-backdrop__glow--right {
+  background: rgba(255, 173, 189, 0.5);
+}
+
+.scene-backdrop--rescue .scene-backdrop__ground {
+  background: linear-gradient(180deg, rgba(115, 77, 63, 0.92) 0%, rgba(39, 22, 27, 0.98) 100%);
+}
+
+.scene-backdrop--chest .scene-backdrop__sky {
+  background:
+    radial-gradient(circle at 50% 10%, rgba(253, 241, 177, 0.24), transparent 30%),
+    linear-gradient(180deg, #10223a 0%, #214257 45%, #3f2a4d 100%);
+}
+
+.scene-backdrop--chest .scene-backdrop__glow--left {
+  background: rgba(123, 216, 214, 0.52);
+}
+
+.scene-backdrop--chest .scene-backdrop__glow--right {
+  background: rgba(255, 204, 122, 0.6);
+}
+
+.scene-backdrop--chest .scene-backdrop__ground {
+  background: linear-gradient(180deg, rgba(72, 53, 74, 0.9) 0%, rgba(23, 15, 37, 0.98) 100%);
+}
+
+.scene-backdrop--proposal .scene-backdrop__sky {
+  background:
+    radial-gradient(circle at 50% 6%, rgba(255, 236, 188, 0.26), transparent 32%),
+    linear-gradient(180deg, #1b3553 0%, #5e597f 45%, #8b4d65 100%);
+}
+
+.scene-backdrop--proposal .scene-backdrop__glow--left {
+  background: rgba(255, 208, 150, 0.68);
+}
+
+.scene-backdrop--proposal .scene-backdrop__glow--right {
+  background: rgba(255, 166, 196, 0.54);
+}
+
+.scene-backdrop--proposal .scene-backdrop__ground {
+  background: linear-gradient(180deg, rgba(117, 61, 89, 0.92) 0%, rgba(36, 17, 31, 0.98) 100%);
+}
+
+.stage-sprite {
+  position: absolute;
+  display: block;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 28px 42px rgba(0, 0, 0, 0.32));
+}
+
+.stage-sprite--opening-girl {
+  left: 10%;
+  bottom: 10%;
+  width: clamp(160px, 20vw, 250px);
+}
+
+.stage-sprite--opening-boy {
+  right: 8%;
+  bottom: 8%;
+  width: clamp(170px, 22vw, 290px);
+}
+
+.stage-sprite--opening-heart,
+.stage-sprite--rescue-heart,
+.stage-sprite--chest-heart,
+.stage-sprite--proposal-heart,
+.stage-sprite--proposal-ring {
+  left: 50%;
+  animation: stagePulseCenter 3.8s ease-in-out infinite;
+}
+
+.stage-sprite--opening-heart {
+  top: 18%;
+  width: clamp(72px, 8vw, 118px);
+}
+
+.stage-sprite--dragon-girl {
+  left: 8%;
+  bottom: 10%;
+  width: clamp(160px, 19vw, 245px);
+}
+
+.stage-sprite--dragon-boy {
+  right: 9%;
+  bottom: 9%;
+  width: clamp(175px, 22vw, 295px);
+}
+
+.stage-sprite--dragon-dragon {
+  left: 50%;
+  top: 11%;
+  width: clamp(250px, 36vw, 440px);
+  transform: translateX(-50%);
+}
+
+.stage-sprite--rescue-boy {
+  left: 14%;
+  bottom: 9%;
+  width: clamp(175px, 22vw, 295px);
+}
+
+.stage-sprite--rescue-girl {
+  right: 12%;
+  bottom: 8%;
+  width: clamp(180px, 22vw, 280px);
+}
+
+.stage-sprite--rescue-dragon {
+  right: 2%;
+  top: 10%;
+  width: clamp(180px, 23vw, 310px);
+  opacity: 0.34;
+  filter: brightness(0.65) saturate(0.85) drop-shadow(0 28px 42px rgba(0, 0, 0, 0.32));
+}
+
+.stage-sprite--rescue-heart {
+  top: 16%;
+  width: clamp(82px, 9vw, 124px);
+}
+
+.stage-sprite--chest-girl {
+  left: 8%;
+  bottom: 10%;
+  width: clamp(160px, 19vw, 245px);
+}
+
+.stage-sprite--chest-boy {
+  right: 7%;
+  bottom: 9%;
+  width: clamp(175px, 22vw, 295px);
+}
+
+.stage-sprite--chest-box {
+  left: 50%;
+  bottom: 11%;
+  width: clamp(210px, 25vw, 340px);
+  transform: translateX(-50%);
+}
+
+.stage-sprite--chest-heart {
+  top: 20%;
+  width: clamp(86px, 9vw, 128px);
+}
+
+.stage-sprite--proposal-boy {
+  left: 17%;
+  bottom: 8%;
+  width: clamp(165px, 20vw, 255px);
+}
+
+.stage-sprite--proposal-girl {
+  right: 13%;
+  bottom: 8%;
+  width: clamp(190px, 22vw, 290px);
+}
+
+.stage-sprite--proposal-chest {
+  left: 50%;
+  bottom: 9%;
+  width: clamp(230px, 27vw, 360px);
+  transform: translateX(-50%);
+}
+
+.stage-sprite--proposal-ring {
+  top: 26%;
+  width: clamp(62px, 6.5vw, 100px);
+}
+
+.stage-sprite--proposal-heart {
+  top: 14%;
+  width: clamp(78px, 8vw, 120px);
+}
+
+.memory-card {
+  margin: 0;
+  justify-self: center;
+  padding: 10px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 214, 239, 0.08));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  transform: rotate(calc((var(--memory-index) - 3.5) * 1.4deg));
 }
 
 .memory-card img {
-  width: min(34vw, 360px);
+  display: block;
+  width: min(100%, 320px);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
   border-radius: 20px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.proposal-app[data-scene="proposal"] .stage__proposal-line {
+  text-shadow: 0 0 18px rgba(255, 223, 173, 0.65);
+}
+
+@keyframes backdropGlow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes stagePulseCenter {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-10px) scale(1.06);
+  }
+}
+
+@media (max-width: 900px) {
+  .stage__subtitle {
+    top: 36px;
+    font-size: 15px;
+  }
+
+  .stage__proposal-line {
+    bottom: 124px;
+    padding: 0 16px;
+  }
+
+  .stage__prompt {
+    bottom: 58px;
+    padding: 12px 20px;
+  }
+
+  .stage__photos {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 16px;
+    padding: 120px 20px 190px;
+  }
+
+  .stage-sprite--opening-girl,
+  .stage-sprite--dragon-girl,
+  .stage-sprite--chest-girl {
+    left: 2%;
+    width: min(35vw, 210px);
+  }
+
+  .stage-sprite--opening-boy,
+  .stage-sprite--dragon-boy,
+  .stage-sprite--rescue-boy,
+  .stage-sprite--chest-boy {
+    right: 2%;
+    width: min(40vw, 240px);
+  }
+
+  .stage-sprite--dragon-dragon,
+  .stage-sprite--chest-box,
+  .stage-sprite--proposal-chest {
+    width: min(62vw, 320px);
+  }
+
+  .stage-sprite--rescue-girl,
+  .stage-sprite--proposal-girl {
+    right: 1%;
+    width: min(38vw, 220px);
+  }
+
+  .stage-sprite--proposal-boy {
+    left: 4%;
+    width: min(34vw, 190px);
+  }
+
+  .memory-card {
+    transform: none;
+  }
 }

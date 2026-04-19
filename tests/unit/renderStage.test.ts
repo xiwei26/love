@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { createApp } from "../../src/app/createApp";
 import { renderStage } from "../../src/app/renderStage";
+import { assetManifest } from "../../src/content/assets";
 import { sceneCopy } from "../../src/content/copy";
 
 describe("renderStage", () => {
@@ -32,5 +34,93 @@ describe("renderStage", () => {
       (document.querySelector('[data-role="chest-trigger"]') as HTMLButtonElement)
         .hidden,
     ).toBe(false);
+  });
+
+  it("renders scene-specific sprites while leaving memory focused on photos", () => {
+    document.body.innerHTML = '<div id="app"></div>';
+    const root = document.querySelector("#app") as HTMLElement;
+
+    createApp(root);
+
+    const appRoot = document.querySelector('[data-role="app-root"]') as HTMLElement;
+
+    const spriteScenes = [
+      {
+        sceneId: "opening" as const,
+        subtitle: sceneCopy.opening,
+        expectedSprites: [
+          assetManifest.sprites.girlIdle,
+          assetManifest.sprites.boyRun,
+          assetManifest.sprites.heart,
+        ],
+      },
+      {
+        sceneId: "dragon" as const,
+        subtitle: sceneCopy.dragon,
+        expectedSprites: [
+          assetManifest.sprites.girlIdle,
+          assetManifest.sprites.boyRun,
+          assetManifest.sprites.dragon,
+        ],
+      },
+      {
+        sceneId: "rescue" as const,
+        subtitle: "",
+        expectedSprites: [
+          assetManifest.sprites.girlRescued,
+          assetManifest.sprites.boyRun,
+          assetManifest.sprites.dragon,
+        ],
+      },
+      {
+        sceneId: "chest" as const,
+        subtitle: sceneCopy.chestPrompt,
+        expectedSprites: [
+          assetManifest.sprites.girlIdle,
+          assetManifest.sprites.boyRun,
+          assetManifest.sprites.chestClosed,
+        ],
+      },
+      {
+        sceneId: "proposal" as const,
+        subtitle: "",
+        expectedSprites: [
+          assetManifest.sprites.girlRescued,
+          assetManifest.sprites.boyKneel,
+          assetManifest.sprites.chestOpen,
+          assetManifest.sprites.ring,
+        ],
+      },
+    ];
+
+    for (const spriteScene of spriteScenes) {
+      renderStage(appRoot, {
+        sceneId: spriteScene.sceneId,
+        subtitle: spriteScene.subtitle,
+        photos: [],
+        showPrompt: spriteScene.sceneId === "chest",
+        proposalLine: "",
+      });
+
+      const sceneSprites = Array.from(
+        document.querySelectorAll<HTMLImageElement>(".stage__actors img, .stage__effects img"),
+      ).map((image) => image.getAttribute("src"));
+
+      expect(sceneSprites).toEqual(expect.arrayContaining(spriteScene.expectedSprites));
+      expect(document.querySelector(".stage__backdrop")?.children.length).toBeGreaterThan(0);
+    }
+
+    renderStage(appRoot, {
+      sceneId: "memory",
+      subtitle: sceneCopy.memory,
+      photos: assetManifest.photos.slice(0, 2),
+      showPrompt: false,
+      proposalLine: "",
+    });
+
+    expect(document.querySelector(".stage__actors")?.childElementCount).toBe(0);
+    expect(document.querySelector(".stage__effects")?.childElementCount).toBe(0);
+    expect(document.querySelector(".stage__backdrop")?.childElementCount).toBe(0);
+    expect(document.querySelectorAll(".memory-card img")).toHaveLength(2);
   });
 });
