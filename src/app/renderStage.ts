@@ -205,6 +205,8 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
         <span class="scene-backdrop__cage scene-backdrop__cage--fracture"></span>
         <span class="scene-backdrop__flame-wave"></span>
         <span class="scene-backdrop__impact"></span>
+        <span class="stage-effect stage-effect--rescue-slash"></span>
+        <span class="stage-effect stage-effect--rescue-burst"></span>
       `;
     case "chest":
       return `

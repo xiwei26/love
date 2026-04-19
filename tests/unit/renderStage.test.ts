@@ -84,6 +84,8 @@ describe("renderStage", () => {
           ".scene-backdrop__lava--arena",
           ".scene-backdrop__flame-wave",
           ".scene-backdrop__impact",
+          ".stage-effect--rescue-slash",
+          ".stage-effect--rescue-burst",
         ],
       },
       {
