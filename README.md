@@ -44,6 +44,15 @@ http://localhost:5173/?testMode=1
 
 这个模式会把剧情时间大幅缩短，方便预览。
 
+## 部署
+
+项目已经配置为适配 GitHub Pages。
+
+- 仓库地址：`https://github.com/xiwei26/love`
+- 预期线上地址：`https://xiwei26.github.io/love/`
+
+每次向 `main` 分支推送后，GitHub Actions 会自动重新构建并部署。
+
 ## 其他常用命令
 
 运行单元测试：
