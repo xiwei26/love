@@ -6,6 +6,7 @@ interface StoryEngineOptions {
 
 interface StoryEngine {
   start: () => void;
+  revealProposal: () => void;
   getState: () => StoryEngineState;
   stop: () => void;
 }
@@ -30,10 +31,8 @@ export function createStoryEngine(
     timer = undefined;
   }
 
-  function advanceTo(nextIndex: number) {
-    clearScheduledAdvance();
-
-    index = nextIndex;
+  function publish(sceneIndex: number) {
+    index = sceneIndex;
     const scene = scenes[index];
 
     state = {
@@ -42,19 +41,42 @@ export function createStoryEngine(
     };
 
     options.onSceneChange(scene.id);
+  }
 
-    if (!scene.autoAdvance || nextIndex >= scenes.length - 1) {
+  function queueAdvance(sceneIndex: number) {
+    clearScheduledAdvance();
+
+    const scene = scenes[sceneIndex];
+
+    if (!scene.autoAdvance || sceneIndex >= scenes.length - 1) {
       return;
     }
 
     timer = window.setTimeout(() => {
-      advanceTo(nextIndex + 1);
+      publish(sceneIndex + 1);
+      queueAdvance(sceneIndex + 1);
     }, scene.durationMs);
   }
 
   return {
     start() {
-      advanceTo(0);
+      publish(0);
+      queueAdvance(0);
+    },
+    revealProposal() {
+      if (state.sceneId !== "chest") {
+        return;
+      }
+
+      clearScheduledAdvance();
+
+      const proposalIndex = scenes.findIndex((scene) => scene.id === "proposal");
+
+      if (proposalIndex === -1) {
+        throw new Error("Proposal scene is missing");
+      }
+
+      publish(proposalIndex);
     },
     getState() {
       return state;

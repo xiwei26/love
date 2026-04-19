@@ -2,6 +2,7 @@ import "./styles/global.css";
 import "./styles/stage.css";
 import { createApp } from "./app/createApp";
 import { renderStage } from "./app/renderStage";
+import { assetManifest } from "./content/assets";
 import { sceneCopy } from "./content/copy";
 import { storyScenes } from "./content/storyConfig";
 import { createStoryEngine } from "./engine/storyEngine";
@@ -15,9 +16,12 @@ if (!root) {
 createApp(root);
 
 const appRoot = document.querySelector<HTMLElement>('[data-role="app-root"]');
+const chestTrigger = document.querySelector<HTMLButtonElement>(
+  '[data-role="chest-trigger"]',
+);
 
-if (!appRoot) {
-  throw new Error("App root not rendered");
+if (!appRoot || !chestTrigger) {
+  throw new Error("Critical app nodes are missing");
 }
 
 const copyByScene = {
@@ -34,11 +38,15 @@ const engine = createStoryEngine(storyScenes, {
     renderStage(appRoot, {
       sceneId,
       subtitle: copyByScene[sceneId],
-      photos: [],
+      photos: sceneId === "memory" ? [...assetManifest.photos] : [],
       showPrompt: sceneId === "chest",
       proposalLine: "",
     });
   },
+});
+
+chestTrigger.addEventListener("click", () => {
+  engine.revealProposal();
 });
 
 engine.start();

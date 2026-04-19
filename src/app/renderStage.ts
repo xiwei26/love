@@ -1,3 +1,4 @@
+import { finalProposalLine } from "../content/copy";
 import type { SceneId } from "../engine/types";
 
 interface RenderStageOptions {
@@ -23,15 +24,19 @@ export function renderStage(root: HTMLElement, options: RenderStageOptions) {
   }
 
   subtitle.textContent = options.subtitle;
-  proposalLine.textContent = options.proposalLine;
+  proposalLine.textContent =
+    options.sceneId === "proposal" ? finalProposalLine : options.proposalLine;
   chestTrigger.hidden = !options.showPrompt;
-  photoStrip.innerHTML = options.photos
-    .map(
-      (photo, index) => `
-        <figure class="memory-card" style="--memory-index:${index}">
-          <img src="${photo}" alt="回忆照片 ${index + 1}" />
-        </figure>
-      `,
-    )
-    .join("");
+  photoStrip.innerHTML =
+    options.sceneId === "memory"
+      ? options.photos
+          .map(
+            (photo, index) => `
+              <figure class="memory-card" style="--memory-index:${index}">
+                <img src="${photo}" alt="回忆照片 ${index + 1}" />
+              </figure>
+            `,
+          )
+          .join("")
+      : "";
 }
