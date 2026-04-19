@@ -3,6 +3,7 @@ export function createApp(root: HTMLElement) {
     <main class="proposal-app" data-role="app-root" data-scene="opening">
       <div class="stage" data-role="stage">
         <div class="stage__backdrop" data-role="stage-backdrop"></div>
+        <div class="stage__memory" data-role="memory-host" hidden></div>
         <div class="stage__actors" data-role="stage-actors"></div>
         <div class="stage__effects" data-role="stage-effects"></div>
         <div class="stage__photos" data-role="photo-strip"></div>

@@ -5,6 +5,7 @@ import { createApp } from "./app/createApp";
 import { renderStage } from "./app/renderStage";
 import { assetManifest } from "./content/assets";
 import { sceneCopy, sceneSubtitleCues } from "./content/copy";
+import { createMemoryScene } from "./memory/createMemoryScene";
 import { storyScenes } from "./content/storyConfig";
 import { createStoryEngine } from "./engine/storyEngine";
 import type { SceneId } from "./engine/types";
@@ -26,18 +27,29 @@ const startOverlay = document.querySelector<HTMLButtonElement>(
   '[data-role="start-overlay"]',
 );
 const subtitle = document.querySelector<HTMLElement>('[data-role="subtitle"]');
+const memoryHost = document.querySelector<HTMLElement>('[data-role="memory-host"]');
 const viewportNote = document.querySelector<HTMLElement>('[data-role="viewport-note"]');
 const bgm = document.querySelector<HTMLAudioElement>('[data-role="bgm"]');
 
-if (!appRoot || !chestTrigger || !startOverlay || !subtitle || !viewportNote || !bgm) {
+if (
+  !appRoot ||
+  !chestTrigger ||
+  !startOverlay ||
+  !subtitle ||
+  !memoryHost ||
+  !viewportNote ||
+  !bgm
+) {
   throw new Error("Critical app nodes are missing");
 }
 
 const stageRoot = appRoot;
 const subtitleElement = subtitle;
+const memoryScene = createMemoryScene();
 
 bgm.src = assetManifest.music;
 viewportNote.hidden = window.innerWidth >= 1024;
+memoryScene.mount(memoryHost);
 
 const speedFactor = new URLSearchParams(window.location.search).has("testMode")
   ? 0.01
@@ -59,6 +71,11 @@ const copyByScene = {
 
 const stageImageAssets = [...Object.values(assetManifest.sprites), ...assetManifest.photos];
 let subtitleTimers: number[] = [];
+
+function syncMemorySize() {
+  const rect = stageRoot.getBoundingClientRect();
+  memoryScene.resize(rect.width, rect.height);
+}
 
 function clearSubtitleCues() {
   subtitleTimers.forEach((timer) => window.clearTimeout(timer));
@@ -89,12 +106,22 @@ function renderScene(sceneId: keyof typeof copyByScene) {
   renderStage(stageRoot, {
     sceneId,
     subtitle: copyByScene[sceneId],
-    photos: sceneId === "memory" ? [...assetManifest.photos] : [],
+    photos: [],
     showPrompt: sceneId === "chest",
     proposalLine: "",
   });
+
+  if (sceneId === "memory") {
+    void memoryScene.start([...assetManifest.photos]);
+  } else {
+    memoryScene.stop();
+  }
+
   scheduleSubtitleCues(sceneId);
 }
+
+syncMemorySize();
+window.addEventListener("resize", syncMemorySize);
 
 renderScene("opening");
 

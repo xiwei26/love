@@ -279,6 +279,9 @@ export function renderStage(root: HTMLElement, options: RenderStageOptions) {
   const effects = root.querySelector<HTMLElement>(
     '[data-role="stage-effects"], .stage__effects',
   );
+  const memoryHost = root.querySelector<HTMLElement>(
+    '[data-role="memory-host"], .stage__memory',
+  );
 
   if (!subtitle || !photoStrip || !chestTrigger || !proposalLine) {
     throw new Error("Stage nodes are missing");
@@ -288,6 +291,10 @@ export function renderStage(root: HTMLElement, options: RenderStageOptions) {
   proposalLine.textContent =
     options.sceneId === "proposal" ? finalProposalLine : options.proposalLine;
   chestTrigger.hidden = !options.showPrompt;
+
+  if (memoryHost) {
+    memoryHost.hidden = options.sceneId !== "memory";
+  }
 
   const sceneVisual = getSceneVisual(options.sceneId);
 
@@ -303,16 +310,5 @@ export function renderStage(root: HTMLElement, options: RenderStageOptions) {
     effects.innerHTML = sceneVisual ? renderSprites(sceneVisual.effects) : "";
   }
 
-  photoStrip.innerHTML =
-    options.sceneId === "memory"
-      ? options.photos
-          .map(
-            (photo, index) => `
-              <figure class="memory-card" style="--memory-index:${index}">
-                <img src="${photo}" alt="Memory photo ${index + 1}" />
-              </figure>
-            `,
-          )
-          .join("")
-      : "";
+  photoStrip.innerHTML = "";
 }

@@ -8,6 +8,7 @@ describe("createApp", () => {
     createApp(document.querySelector<HTMLElement>("#app")!);
 
     expect(document.querySelector(".proposal-app")).not.toBeNull();
+    expect(document.querySelector('[data-role="memory-host"]')).not.toBeNull();
     expect(document.querySelector('[data-role="subtitle"]')?.textContent).toBe("");
     expect(document.querySelector('[data-role="start-overlay"]')).not.toBeNull();
   });

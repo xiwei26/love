@@ -146,9 +146,12 @@ describe("renderStage", () => {
       proposalLine: "",
     });
 
+    expect((document.querySelector('[data-role="memory-host"]') as HTMLElement).hidden).toBe(
+      false,
+    );
     expect(document.querySelector(".stage__actors")?.childElementCount).toBe(0);
     expect(document.querySelector(".stage__effects")?.childElementCount).toBe(0);
     expect(document.querySelector(".stage__backdrop")?.childElementCount).toBe(0);
-    expect(document.querySelectorAll(".memory-card img")).toHaveLength(2);
+    expect(document.querySelectorAll(".memory-card img")).toHaveLength(0);
   });
 });

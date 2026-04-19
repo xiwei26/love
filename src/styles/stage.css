@@ -28,6 +28,7 @@
 }
 
 .stage__backdrop,
+.stage__memory,
 .stage__actors,
 .stage__effects,
 .stage__photos {
@@ -45,21 +46,32 @@
   z-index: 0;
 }
 
-.stage__actors {
+.stage__memory {
   z-index: 1;
+  pointer-events: none;
 }
 
-.stage__effects {
+.stage__actors {
   z-index: 2;
 }
 
-.stage__photos {
+.stage__effects {
   z-index: 3;
+}
+
+.stage__photos {
+  z-index: 4;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 24px;
   place-content: center;
   padding: 148px 48px 240px;
+}
+
+.stage__memory canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .stage__subtitle,
