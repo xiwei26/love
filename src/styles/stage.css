@@ -89,6 +89,7 @@
   max-width: min(86vw, 760px);
   margin: 0;
   padding: 14px 20px;
+  font-size: 32px;
   color: rgba(255, 244, 236, 0.94);
   letter-spacing: 0.08em;
   line-height: 1.55;
@@ -1266,7 +1267,7 @@
 @media (max-width: 900px) {
   .stage__subtitle {
     top: 34px;
-    font-size: 15px;
+    font-size: 30px;
     padding: 12px 16px;
   }
 
