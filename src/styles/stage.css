@@ -102,7 +102,7 @@
   bottom: 152px;
   max-width: min(90vw, 820px);
   margin: 0;
-  font-size: clamp(34px, 4vw, 58px);
+  font-size: clamp(54px, 6vw, 92px);
   font-weight: 700;
   line-height: 1.1;
   text-align: center;
@@ -837,13 +837,13 @@
 
 .stage-sprite--proposal-ring {
   top: 25%;
-  width: clamp(68px, 6vw, 100px);
+  width: clamp(108px, 9vw, 160px);
   animation-duration: 2.8s;
 }
 
 .stage-sprite--proposal-heart {
   top: 13%;
-  width: clamp(84px, 7vw, 120px);
+  width: clamp(132px, 11vw, 190px);
 }
 
 .memory-card {
@@ -1273,6 +1273,7 @@
 
   .stage__proposal-line {
     bottom: 118px;
+    font-size: clamp(42px, 8vw, 64px);
     padding: 0 16px;
   }
 
