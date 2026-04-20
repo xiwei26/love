@@ -44,4 +44,25 @@ describe("createMemoryLayout", () => {
     expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(5);
     expect(layout.supporting.every((item) => item.scale <= 0.7)).toBe(true);
   });
+
+  it("tunes selected real-photo positions for better framing", () => {
+    const layout = createMemoryLayout([
+      "/photos/memory-01.jpg",
+      "/photos/memory-02.jpg",
+      "/photos/memory-03.jpg",
+      "/photos/memory-04.jpg",
+      "/photos/memory-05.jpg",
+      "/photos/memory-06.jpg",
+      "/photos/memory-07.jpg",
+      "/photos/memory-08.jpg",
+    ]);
+
+    const supportingByPhoto = Object.fromEntries(
+      layout.supporting.map((item) => [item.photoUrl, item]),
+    );
+
+    expect(supportingByPhoto["/photos/memory-02.jpg"]?.x).toBe(-4.1);
+    expect(supportingByPhoto["/photos/memory-04.jpg"]?.y).toBe(1.7);
+    expect(supportingByPhoto["/photos/memory-07.jpg"]?.y).toBe(-1.8);
+  });
 });
