@@ -24,4 +24,24 @@ describe("createMemoryLayout", () => {
 
     expect(layout.gatherTargets).toHaveLength(3);
   });
+
+  it("spreads supporting photos across a wider field to avoid overlap", () => {
+    const layout = createMemoryLayout([
+      "/photos/memory-01.jpg",
+      "/photos/memory-02.jpg",
+      "/photos/memory-03.jpg",
+      "/photos/memory-04.jpg",
+      "/photos/memory-05.jpg",
+      "/photos/memory-06.jpg",
+      "/photos/memory-07.jpg",
+      "/photos/memory-08.jpg",
+    ]);
+
+    const xs = layout.supporting.map((item) => item.x);
+    const zs = layout.supporting.map((item) => item.z);
+
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(4.5);
+    expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(1.8);
+    expect(layout.supporting.every((item) => item.scale <= 0.74)).toBe(true);
+  });
 });
