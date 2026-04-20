@@ -1,13 +1,13 @@
 import type { MemoryPhotoPlacement, MemorySceneLayout } from "./types";
 
 const supportingLayoutPresets = [
-  { x: -3.4, y: 1.55, z: -1.9, rotationY: -0.24, scale: 0.62 },
-  { x: -1.75, y: -0.55, z: -2.45, rotationY: 0.16, scale: 0.66 },
-  { x: 1.9, y: 1.25, z: -3.0, rotationY: -0.14, scale: 0.7 },
-  { x: 3.65, y: 0.05, z: -3.55, rotationY: 0.2, scale: 0.64 },
-  { x: -2.95, y: -1.75, z: -4.2, rotationY: -0.18, scale: 0.6 },
-  { x: 0.2, y: -1.35, z: -4.75, rotationY: 0.1, scale: 0.62 },
-  { x: 2.85, y: 1.9, z: -5.3, rotationY: 0.24, scale: 0.58 },
+  { x: -4.8, y: 1.55, z: -1.6, rotationY: -0.24, scale: 0.62 },
+  { x: -2.7, y: -0.55, z: -2.45, rotationY: 0.16, scale: 0.66 },
+  { x: 0.1, y: 1.25, z: -3.3, rotationY: -0.14, scale: 0.68 },
+  { x: 3.2, y: 0.05, z: -4.2, rotationY: 0.2, scale: 0.64 },
+  { x: -3.9, y: -1.75, z: -5.15, rotationY: -0.18, scale: 0.6 },
+  { x: -0.9, y: -1.35, z: -6.0, rotationY: 0.1, scale: 0.6 },
+  { x: 5.3, y: 1.9, z: -6.95, rotationY: 0.24, scale: 0.56 },
 ] as const;
 
 function createSupportingPlacement(photoUrl: string, index: number): MemoryPhotoPlacement {
@@ -30,9 +30,9 @@ function createSupportingPlacement(photoUrl: string, index: number): MemoryPhoto
 
   return {
     photoUrl,
-    x: direction * (3.25 + ring * 0.7),
-    y: ring % 2 === 0 ? 1.8 : -1.65,
-    z: -5.7 - mirroredIndex * 0.45,
+    x: direction * (4.4 + ring * 0.8),
+    y: ring % 2 === 0 ? 1.9 : -1.75,
+    z: -7.45 - mirroredIndex * 0.55,
     rotationY: direction * 0.2,
     scale: 0.56,
   };
