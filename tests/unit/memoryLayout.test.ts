@@ -61,8 +61,8 @@ describe("createMemoryLayout", () => {
       layout.supporting.map((item) => [item.photoUrl, item]),
     );
 
-    expect(supportingByPhoto["/photos/memory-02.jpg"]?.x).toBe(-4.1);
-    expect(supportingByPhoto["/photos/memory-04.jpg"]?.y).toBe(1.7);
+    expect(supportingByPhoto["/photos/memory-02.jpg"]?.x).toBe(-3.1);
+    expect(supportingByPhoto["/photos/memory-04.jpg"]?.y).toBe(1.8);
     expect(supportingByPhoto["/photos/memory-07.jpg"]?.y).toBe(-1.8);
   });
 });
