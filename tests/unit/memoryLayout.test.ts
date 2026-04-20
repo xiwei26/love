@@ -40,8 +40,8 @@ describe("createMemoryLayout", () => {
     const xs = layout.supporting.map((item) => item.x);
     const zs = layout.supporting.map((item) => item.z);
 
-    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(4.5);
-    expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(1.8);
-    expect(layout.supporting.every((item) => item.scale <= 0.74)).toBe(true);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(6.5);
+    expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(3.2);
+    expect(layout.supporting.every((item) => item.scale <= 0.7)).toBe(true);
   });
 });
