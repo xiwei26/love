@@ -1,13 +1,13 @@
 import type { MemoryPhotoPlacement, MemorySceneLayout } from "./types";
 
 const supportingLayoutPresets = [
-  { x: -4.1, y: 1.55, z: -1.6, rotationY: -0.24, scale: 0.62 },
-  { x: -2.7, y: -0.55, z: -2.45, rotationY: 0.16, scale: 0.66 },
-  { x: 0.1, y: 1.7, z: -3.3, rotationY: -0.14, scale: 0.68 },
-  { x: 3.2, y: 0.05, z: -4.2, rotationY: 0.2, scale: 0.64 },
+  { x: -3.1, y: 1.55, z: -1.6, rotationY: -0.24, scale: 0.62 },
+  { x: -2.7, y: 1.55, z: -2.45, rotationY: 0.16, scale: 0.7 },
+  { x: 0.1, y: 1.8, z: -3.3, rotationY: -0.14, scale: 0.68 },
+  { x: 3.2, y: 0.05, z: -4.2, rotationY: 0.2, scale: 0.7 },
   { x: -3.9, y: -1.75, z: -5.15, rotationY: -0.18, scale: 0.6 },
   { x: -0.9, y: -1.8, z: -6.0, rotationY: 0.1, scale: 0.6 },
-  { x: 5.3, y: 1.9, z: -6.95, rotationY: 0.24, scale: 0.56 },
+  { x: 5.3, y: 1.9, z: -6.95, rotationY: 0.24, scale: 0.6 },
 ] as const;
 
 function createSupportingPlacement(photoUrl: string, index: number): MemoryPhotoPlacement {
