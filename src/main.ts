@@ -72,6 +72,10 @@ const copyByScene = {
 const stageImageAssets = [...Object.values(assetManifest.sprites), ...assetManifest.photos];
 let subtitleTimers: number[] = [];
 
+function syncViewportHeight() {
+  document.documentElement.style.setProperty("--app-height", `${window.innerHeight}px`);
+}
+
 function syncMemorySize() {
   const rect = stageRoot.getBoundingClientRect();
   memoryScene.resize(rect.width, rect.height);
@@ -120,8 +124,14 @@ function renderScene(sceneId: keyof typeof copyByScene) {
   scheduleSubtitleCues(sceneId);
 }
 
-syncMemorySize();
-window.addEventListener("resize", syncMemorySize);
+function syncViewportLayout() {
+  syncViewportHeight();
+  syncMemorySize();
+}
+
+syncViewportLayout();
+window.addEventListener("resize", syncViewportLayout);
+window.visualViewport?.addEventListener("resize", syncViewportLayout);
 
 renderScene("opening");
 
