@@ -180,9 +180,15 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
       `;
     case "dragon":
       return `
+        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--deep"></span>
+        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--dragon"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
         <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
         <span class="scene-backdrop__lava scene-backdrop__lava--front"></span>
+        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--left"></span>
+        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--right"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--entry"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--bridge"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--boss"></span>
@@ -194,9 +200,15 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
       `;
     case "rescue":
       return `
+        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--battle"></span>
+        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--rescue"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
         <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
         <span class="scene-backdrop__lava scene-backdrop__lava--arena"></span>
+        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--center"></span>
+        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--right"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--arena-left"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--arena-center"></span>
         <span class="scene-backdrop__platform scene-backdrop__platform--captive"></span>
@@ -210,6 +222,9 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
       `;
     case "chest":
       return `
+        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--vault"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-left"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-right"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
         <span class="scene-backdrop__dais scene-backdrop__dais--chest"></span>
         <span class="scene-backdrop__pillar scene-backdrop__pillar--left"></span>
@@ -217,6 +232,10 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
       `;
     case "proposal":
       return `
+        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--proposal"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-left"></span>
+        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-right"></span>
+        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--proposal"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
         <span class="scene-backdrop__dais scene-backdrop__dais--proposal"></span>
         <span class="scene-backdrop__beam scene-backdrop__beam--left"></span>
