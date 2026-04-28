@@ -148,24 +148,10 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   },
 };
 
-function renderSharedAtmosphere(sceneId: Exclude<SceneId, "memory">) {
-  const embers =
-    sceneId === "dragon" || sceneId === "rescue"
-      ? `
-          <span class="scene-backdrop__ember scene-backdrop__ember--1"></span>
-          <span class="scene-backdrop__ember scene-backdrop__ember--2"></span>
-          <span class="scene-backdrop__ember scene-backdrop__ember--3"></span>
-          <span class="scene-backdrop__ember scene-backdrop__ember--4"></span>
-        `
-      : `
-          <span class="scene-backdrop__dust scene-backdrop__dust--1"></span>
-          <span class="scene-backdrop__dust scene-backdrop__dust--2"></span>
-        `;
-
+function renderSharedAtmosphere() {
   return `
     <span class="scene-backdrop__glow scene-backdrop__glow--left"></span>
     <span class="scene-backdrop__glow scene-backdrop__glow--right"></span>
-    ${embers}
   `;
 }
 
@@ -181,7 +167,6 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
     case "dragon":
       return `
         <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--deep"></span>
-        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--dragon"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
@@ -201,7 +186,6 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
     case "rescue":
       return `
         <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--battle"></span>
-        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--rescue"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
@@ -235,7 +219,6 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
         <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--proposal"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-left"></span>
         <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-right"></span>
-        <span class="scene-backdrop__rune-ring scene-backdrop__rune-ring--proposal"></span>
         <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
         <span class="scene-backdrop__dais scene-backdrop__dais--proposal"></span>
         <span class="scene-backdrop__beam scene-backdrop__beam--left"></span>
@@ -245,15 +228,22 @@ function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
   }
 }
 
+function getBackdropImage(sceneId: Exclude<SceneId, "memory">) {
+  return assetManifest.backgrounds[sceneId];
+}
+
 function renderBackdrop(sceneId: SceneId) {
   if (sceneId === "memory") {
     return "";
   }
 
+  const backdropImage = getBackdropImage(sceneId);
+  const style = ` style="--scene-bg: url('${backdropImage}')"`;
+
   return `
-    <div class="scene-backdrop scene-backdrop--${sceneId}" aria-hidden="true">
+    <div class="scene-backdrop scene-backdrop--${sceneId}" aria-hidden="true"${style}>
       <span class="scene-backdrop__sky"></span>
-      ${renderSharedAtmosphere(sceneId)}
+      ${renderSharedAtmosphere()}
       ${renderSceneArchitecture(sceneId)}
       <span class="scene-backdrop__ground"></span>
       <span class="scene-backdrop__foreground scene-backdrop__foreground--left"></span>

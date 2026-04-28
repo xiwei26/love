@@ -136,6 +136,10 @@ describe("renderStage", () => {
       spriteScene.expectedBackdropSelectors.forEach((selector) => {
         expect(document.querySelector(selector)).not.toBeNull();
       });
+
+      const sceneBackdrop = document.querySelector<HTMLElement>(".scene-backdrop");
+      expect(sceneBackdrop?.getAttribute("style")).toContain("--scene-bg:");
+      expect(sceneBackdrop?.getAttribute("style")).toContain("backgrounds/stage-");
     }
 
     renderStage(appRoot, {
@@ -152,6 +156,7 @@ describe("renderStage", () => {
     expect(document.querySelector(".stage__actors")?.childElementCount).toBe(0);
     expect(document.querySelector(".stage__effects")?.childElementCount).toBe(0);
     expect(document.querySelector(".stage__backdrop")?.childElementCount).toBe(0);
+    expect(document.querySelector(".scene-backdrop")).toBeNull();
     expect(document.querySelectorAll(".memory-card img")).toHaveLength(0);
   });
 });

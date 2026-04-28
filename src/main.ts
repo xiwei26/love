@@ -69,7 +69,11 @@ const copyByScene = {
   proposal: "",
 } as const;
 
-const stageImageAssets = [...Object.values(assetManifest.sprites), ...assetManifest.photos];
+const stageImageAssets = [
+  ...Object.values(assetManifest.sprites),
+  ...Object.values(assetManifest.backgrounds),
+  ...assetManifest.photos,
+];
 let subtitleTimers: number[] = [];
 
 function syncViewportHeight() {

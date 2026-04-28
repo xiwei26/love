@@ -17,6 +17,13 @@ export const assetManifest = {
     heart: withBase("sprites/heart.png"),
     ring: withBase("sprites/ring.png"),
   },
+  backgrounds: {
+    opening: withBase("backgrounds/stage-opening.png"),
+    dragon: withBase("backgrounds/stage-dragon.png"),
+    rescue: withBase("backgrounds/stage-rescue.png"),
+    chest: withBase("backgrounds/stage-chest.png"),
+    proposal: withBase("backgrounds/stage-proposal.png"),
+  },
   photos: [
     withBase("photos/memory-01.jpg"),
     withBase("photos/memory-02.jpg"),
