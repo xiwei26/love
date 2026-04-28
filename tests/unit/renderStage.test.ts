@@ -4,6 +4,14 @@ import { renderStage } from "../../src/app/renderStage";
 import { assetManifest } from "../../src/content/assets";
 import { sceneCopy } from "../../src/content/copy";
 
+const characterSceneActorOrder = [
+  ["opening", ".stage-sprite--opening-boy", ".stage-sprite--opening-girl"],
+  ["dragon", ".stage-sprite--dragon-boy", ".stage-sprite--dragon-girl"],
+  ["rescue", ".stage-sprite--rescue-boy", ".stage-sprite--rescue-girl"],
+  ["chest", ".stage-sprite--chest-boy", ".stage-sprite--chest-girl"],
+  ["proposal", ".stage-sprite--proposal-boy", ".stage-sprite--proposal-girl"],
+] as const;
+
 describe("renderStage", () => {
   it("updates the scene, subtitle, and chest prompt visibility", () => {
     document.body.innerHTML = `
@@ -34,6 +42,32 @@ describe("renderStage", () => {
       (document.querySelector('[data-role="chest-trigger"]') as HTMLButtonElement)
         .hidden,
     ).toBe(false);
+  });
+
+  it("renders the hero before the heroine in every character scene", () => {
+    document.body.innerHTML = '<div id="app"></div>';
+    const root = document.querySelector("#app") as HTMLElement;
+
+    createApp(root);
+
+    const appRoot = document.querySelector('[data-role="app-root"]') as HTMLElement;
+
+    characterSceneActorOrder.forEach(([sceneId, heroSelector, heroineSelector]) => {
+      renderStage(appRoot, {
+        sceneId,
+        subtitle: "",
+        photos: [],
+        showPrompt: false,
+        proposalLine: "",
+      });
+
+      const actorClasses = Array.from(
+        document.querySelectorAll<HTMLImageElement>(".stage__actors img"),
+      ).map((image) => image.className);
+
+      expect(actorClasses[0]).toContain(heroSelector.slice(1));
+      expect(actorClasses[1]).toContain(heroineSelector.slice(1));
+    });
   });
 
   it("renders scene-specific sprites while leaving memory focused on photos", () => {

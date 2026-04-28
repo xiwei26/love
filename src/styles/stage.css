@@ -832,14 +832,14 @@
 }
 
 .stage-sprite--opening-girl {
-  left: 12%;
+  right: 12%;
   bottom: 12%;
   width: clamp(180px, 17vw, 260px);
   animation: idleFloat 3.4s ease-in-out infinite;
 }
 
 .stage-sprite--opening-boy {
-  right: 12%;
+  left: 12%;
   bottom: 12%;
   width: clamp(185px, 19vw, 280px);
   animation: heroAdvanceGentle 7.8s ease-in-out infinite;
@@ -961,14 +961,14 @@
 }
 
 .stage-sprite--chest-girl {
-  left: 18%;
+  right: 18%;
   bottom: 14%;
   width: clamp(170px, 17vw, 245px);
   animation: calmBob 4.4s ease-in-out infinite;
 }
 
 .stage-sprite--chest-boy {
-  right: 17%;
+  left: 17%;
   bottom: 14%;
   width: clamp(178px, 18vw, 258px);
   animation: calmBob 4.4s ease-in-out infinite -2.2s;
@@ -1198,11 +1198,11 @@
   }
 
   45% {
-    transform: translateX(-18px) translateY(-3px);
+    transform: translateX(18px) translateY(-3px);
   }
 
   70% {
-    transform: translateX(12px) translateY(0);
+    transform: translateX(-12px) translateY(0);
   }
 }
 

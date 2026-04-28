@@ -25,14 +25,14 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   opening: {
     actors: [
       {
-        alt: "Waiting heroine",
-        className: "stage-sprite--opening-girl",
-        src: assetManifest.sprites.girlIdle,
-      },
-      {
         alt: "Running hero",
         className: "stage-sprite--opening-boy",
         src: assetManifest.sprites.boyRun,
+      },
+      {
+        alt: "Waiting heroine",
+        className: "stage-sprite--opening-girl",
+        src: assetManifest.sprites.girlIdle,
       },
     ],
     effects: [
@@ -46,14 +46,14 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   dragon: {
     actors: [
       {
-        alt: "Captured heroine",
-        className: "stage-sprite--dragon-girl",
-        src: assetManifest.sprites.girlIdle,
-      },
-      {
         alt: "Approaching hero",
         className: "stage-sprite--dragon-boy",
         src: assetManifest.sprites.boyRun,
+      },
+      {
+        alt: "Captured heroine",
+        className: "stage-sprite--dragon-girl",
+        src: assetManifest.sprites.girlIdle,
       },
       {
         alt: "Dragon guardian",
@@ -92,14 +92,14 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   chest: {
     actors: [
       {
-        alt: "Waiting heroine",
-        className: "stage-sprite--chest-girl",
-        src: assetManifest.sprites.girlIdle,
-      },
-      {
         alt: "Waiting hero",
         className: "stage-sprite--chest-boy",
         src: assetManifest.sprites.boyRun,
+      },
+      {
+        alt: "Waiting heroine",
+        className: "stage-sprite--chest-girl",
+        src: assetManifest.sprites.girlIdle,
       },
       {
         alt: "Treasure chest",
