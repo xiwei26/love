@@ -76,3 +76,31 @@ test("keeps the hero left of the heroine in stable character scenes", async ({ p
     ".stage-sprite--proposal-girl",
   );
 });
+
+for (const viewport of [{ width: 1440, height: 900 }, { width: 844, height: 390 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
+  test(`keeps controls and proposal composition clear at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/?testMode=1");
+    await page.getByRole("button", { name: "点击开启音乐与童话" }).click();
+    const trigger = page.locator('[data-role="chest-trigger"]');
+    await expect(trigger).toBeVisible();
+    const receivesClick = await trigger.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      return document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2) === element;
+    });
+    expect(receivesClick).toBe(true);
+    await trigger.click();
+    await expect(page.locator('[data-role="app-root"]')).toHaveAttribute("data-scene", "proposal");
+    await page.waitForTimeout(1800);
+    const line = await page.locator('[data-role="proposal-line"]').boundingBox();
+    for (const selector of [".stage-sprite--proposal-boy", ".stage-sprite--proposal-girl", ".stage-sprite--proposal-chest", ".stage-sprite--proposal-ring"]) {
+      const box = await page.locator(selector).boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.x).toBeGreaterThanOrEqual(0);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width);
+      expect(box!.y).toBeGreaterThanOrEqual(line!.y + line!.height);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}

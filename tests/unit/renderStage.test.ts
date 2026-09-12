@@ -87,10 +87,7 @@ describe("renderStage", () => {
           assetManifest.sprites.boyRun,
           assetManifest.sprites.heart,
         ],
-        expectedBackdropSelectors: [
-          ".scene-backdrop__platform--opening-left",
-          ".scene-backdrop__mist--left",
-        ],
+        expectedBackdropSelectors: [".scene-backdrop__sky"],
       },
       {
         sceneId: "dragon" as const,
@@ -100,11 +97,7 @@ describe("renderStage", () => {
           assetManifest.sprites.boyRun,
           assetManifest.sprites.dragon,
         ],
-        expectedBackdropSelectors: [
-          ".scene-backdrop__lava--front",
-          ".scene-backdrop__platform--captive",
-          ".scene-backdrop__cage",
-        ],
+        expectedBackdropSelectors: [".scene-backdrop__sky"],
       },
       {
         sceneId: "rescue" as const,
@@ -114,26 +107,17 @@ describe("renderStage", () => {
           assetManifest.sprites.boyRun,
           assetManifest.sprites.dragon,
         ],
-        expectedBackdropSelectors: [
-          ".scene-backdrop__lava--arena",
-          ".scene-backdrop__flame-wave",
-          ".scene-backdrop__impact",
-          ".stage-effect--rescue-slash",
-          ".stage-effect--rescue-burst",
-        ],
+        expectedBackdropSelectors: [".scene-backdrop__sky"],
       },
       {
         sceneId: "chest" as const,
         subtitle: sceneCopy.chestPrompt,
         expectedSprites: [
           assetManifest.sprites.girlIdle,
-          assetManifest.sprites.boyRun,
+          assetManifest.sprites.boyIdle,
           assetManifest.sprites.chestClosed,
         ],
-        expectedBackdropSelectors: [
-          ".scene-backdrop__dais--chest",
-          ".scene-backdrop__pillar--left",
-        ],
+        expectedBackdropSelectors: [".scene-backdrop__sky"],
       },
       {
         sceneId: "proposal" as const,
@@ -144,10 +128,7 @@ describe("renderStage", () => {
           assetManifest.sprites.chestOpen,
           assetManifest.sprites.ring,
         ],
-        expectedBackdropSelectors: [
-          ".scene-backdrop__dais--proposal",
-          ".scene-backdrop__beam--center",
-        ],
+        expectedBackdropSelectors: [".scene-backdrop__sky"],
       },
     ];
 

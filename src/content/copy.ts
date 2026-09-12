@@ -3,7 +3,7 @@ import type { SceneId, SubtitleCue } from "../engine/types";
 export const sceneCopy = {
   opening: "在一个藏着秘密与宝藏的世界里……",
   dragon: "她不小心闯进了龙守护的秘境。",
-  memory: "故事没有停在这一刻，之后的他们，还会一起越过高山，奔赴山海，走向更远的远方。",
+  memory: "故事没有停在这一刻，之后的他们，还会一起越过高山。",
   chestPrompt: "点一下，打开属于我们的终章。",
 } as const;
 
@@ -30,6 +30,12 @@ export const sceneSubtitleCues: Partial<Record<SceneId, SubtitleCue[]>> = {
     {
       atMs: 10800,
       text: "他穿过火光与危险，只为来到你的身边。",
+    },
+  ],
+  memory: [
+    {
+      atMs: 9000,
+      text: "他们会奔赴山海，走向更远的远方。",
     },
   ],
 } as const;

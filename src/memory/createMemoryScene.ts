@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { createMemoryLayout } from "./createMemoryLayout";
+import { createMemoryLayout, getPhotoDimensions } from "./createMemoryLayout";
 import type { MemoryPhotoPlacement, MemorySceneController } from "./types";
 
 interface PhotoPlaneState {
@@ -9,10 +9,8 @@ interface PhotoPlaneState {
   startPosition: THREE.Vector3;
   targetPosition: THREE.Vector3;
   gatherPosition: THREE.Vector3;
+  scale: number;
 }
-
-const cardGeometry = new THREE.PlaneGeometry(1.5, 1.9, 1, 1);
-const frameGeometry = new THREE.PlaneGeometry(1.66, 2.06, 1, 1);
 
 const totalDurationMs = 22000;
 const arrivalEndMs = 5000;
@@ -48,15 +46,21 @@ function loadTexture(loader: THREE.TextureLoader, photoUrl: string) {
   });
 }
 
+function getTextureAspect(texture: THREE.Texture) {
+  const image = texture.image as HTMLImageElement;
+  return image.width / image.height;
+}
+
 function createPhotoPlane(texture: THREE.Texture) {
   const group = new THREE.Group();
-  const frame = new THREE.Mesh(frameGeometry.clone(), undefined);
-  const photo = new THREE.Mesh(cardGeometry.clone(), undefined);
+  const { width, height } = getPhotoDimensions(getTextureAspect(texture));
+  const frame = new THREE.Mesh(new THREE.PlaneGeometry(width + .045, height + .045), undefined);
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(width, height), undefined);
 
   const frameMaterial = new THREE.MeshBasicMaterial({
-    color: 0xf3e9ef,
+    color: 0xe6c589,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.5,
     side: THREE.DoubleSide,
   });
   frame.material = frameMaterial;
@@ -112,10 +116,12 @@ function buildPhotoState(
     startPosition,
     targetPosition: new THREE.Vector3(placement.x, placement.y, placement.z),
     gatherPosition: new THREE.Vector3(gatherTarget.x, gatherTarget.y, gatherTarget.z),
+    scale: placement.scale,
   } satisfies PhotoPlaneState;
 }
 
 export function createMemoryScene(): MemorySceneController {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 30);
   camera.position.set(0, 0, 5.2);
@@ -129,7 +135,7 @@ export function createMemoryScene(): MemorySceneController {
 
   const loader = new THREE.TextureLoader();
   const particleGeometry = new THREE.BufferGeometry();
-  const particleCount = 220;
+  const particleCount = 100;
   const particlePositions = new Float32Array(particleCount * 3);
 
   for (let index = 0; index < particleCount; index += 1) {
@@ -147,10 +153,10 @@ export function createMemoryScene(): MemorySceneController {
   const particles = new THREE.Points(
     particleGeometry,
     new THREE.PointsMaterial({
-      color: 0xf5f2ff,
-      size: 0.05,
+      color: 0xffdfa3,
+      size: 0.025,
       transparent: true,
-      opacity: 0.72,
+      opacity: 0.48,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     }),
@@ -170,6 +176,23 @@ export function createMemoryScene(): MemorySceneController {
   let active = false;
   let currentPhotoStates: PhotoPlaneState[] = [];
   let startNonce = 0;
+  let currentPhotoUrls: string[] = [];
+
+  function syncPhotoLayout() {
+    if (!currentPhotoStates.length) return;
+    const layout = createMemoryLayout(currentPhotoUrls, {
+      aspectRatio: camera.aspect,
+      photoAspects: currentPhotoStates.map(({ photoMaterial }) => getTextureAspect(photoMaterial.map!)),
+    });
+    [layout.hero, ...layout.supporting].forEach((placement, index) => {
+      const state = currentPhotoStates[index];
+      state.targetPosition.set(placement.x, placement.y, placement.z);
+      state.startPosition.set(placement.x * .8, placement.y * .8, placement.z - 2.2);
+      const gather = layout.gatherTargets[index];
+      state.gatherPosition.set(gather.x, gather.y, gather.z);
+      state.scale = placement.scale;
+    });
+  }
 
   function ensureMounted() {
     if (!host || renderer.domElement.parentElement === host) {
@@ -205,7 +228,7 @@ export function createMemoryScene(): MemorySceneController {
       phaseStart = now;
     }
 
-    const elapsed = now - phaseStart;
+    const elapsed = reducedMotion ? expansionEndMs : now - phaseStart;
     const arrivalProgress = easeOutCubic(clamp01(elapsed / arrivalEndMs));
     const gatherProgress = easeInOutSine(
       clamp01((elapsed - gatherStartMs) / (totalDurationMs - gatherStartMs)),
@@ -220,7 +243,7 @@ export function createMemoryScene(): MemorySceneController {
           state.targetPosition,
           gatherProgress > 0 ? 1 - gatherProgress * 0.18 : arrivalProgress,
         );
-        state.group.rotation.y = THREE.MathUtils.lerp(0, 0.04, arrivalProgress);
+        state.group.rotation.y = 0;
       } else {
         const localStart = arrivalEndMs * 0.58 + (index - 1) * 900;
         const appearProgress = easeOutCubic(
@@ -234,21 +257,19 @@ export function createMemoryScene(): MemorySceneController {
         );
         state.group.rotation.y = THREE.MathUtils.lerp(
           state.group.rotation.y,
-          state.targetPosition.x >= 0 ? -0.08 : 0.08,
+          state.targetPosition.x >= 0 ? -0.025 : 0.025,
           0.06,
         );
         state.photoMaterial.opacity = appearProgress * (1 - gatherProgress * 0.55);
-        state.frameMaterial.opacity = appearProgress * 0.24 * (1 - gatherProgress * 0.4);
+        state.frameMaterial.opacity = appearProgress * 0.5 * (1 - gatherProgress * 0.4);
       }
 
+      state.group.scale.setScalar(state.scale * (1 - gatherProgress * .12));
       if (gatherProgress > 0) {
-        state.group.position.lerp(state.gatherPosition, gatherProgress * 0.1);
-        state.group.scale.setScalar(
-          THREE.MathUtils.lerp(state.group.scale.x, 0.74, gatherProgress * 0.12),
-        );
+        state.group.position.lerp(state.gatherPosition, gatherProgress);
         if (isHero) {
           state.photoMaterial.opacity = 1 - gatherProgress * 0.32;
-          state.frameMaterial.opacity = 0.18 - gatherProgress * 0.08;
+          state.frameMaterial.opacity = 0.5 - gatherProgress * 0.15;
         }
       }
     });
@@ -256,12 +277,10 @@ export function createMemoryScene(): MemorySceneController {
     particles.rotation.y += 0.0007;
     particles.rotation.x = Math.sin(elapsed * 0.00016) * 0.03;
 
-    camera.position.x = Math.sin(elapsed * 0.00024) * 0.14;
-    camera.position.y = Math.cos(elapsed * 0.0002) * 0.08;
     camera.lookAt(0, 0, -0.6);
 
     renderer.render(scene, camera);
-    animationFrame = window.requestAnimationFrame(renderFrame);
+    animationFrame = reducedMotion ? 0 : window.requestAnimationFrame(renderFrame);
   }
 
   return {
@@ -278,9 +297,8 @@ export function createMemoryScene(): MemorySceneController {
       const nonce = ++startNonce;
       ensureMounted();
 
-      const layout = createMemoryLayout(photoUrls);
       const textures = await Promise.all(
-        [layout.hero.photoUrl, ...layout.supporting.map((item) => item.photoUrl)].map((url) =>
+        photoUrls.map((url) =>
           loadTexture(loader, url),
         ),
       );
@@ -289,6 +307,12 @@ export function createMemoryScene(): MemorySceneController {
         textures.forEach((texture: THREE.Texture) => texture.dispose());
         return;
       }
+
+      currentPhotoUrls = photoUrls;
+      const layout = createMemoryLayout(photoUrls, {
+        aspectRatio: camera.aspect,
+        photoAspects: textures.map(getTextureAspect),
+      });
 
       const heroState = buildPhotoState(
         layout.hero,
@@ -309,6 +333,7 @@ export function createMemoryScene(): MemorySceneController {
       supportingStates.forEach((state) => scene.add(state.group));
 
       currentPhotoStates = [heroState, ...supportingStates];
+      syncPhotoLayout();
       active = true;
       phaseStart = 0;
       animationFrame = window.requestAnimationFrame(renderFrame);
@@ -330,6 +355,8 @@ export function createMemoryScene(): MemorySceneController {
       camera.aspect = safeWidth / safeHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(safeWidth, safeHeight, false);
+      syncPhotoLayout();
+      if (active && reducedMotion) renderFrame(performance.now());
     },
     dispose() {
       this.stop();

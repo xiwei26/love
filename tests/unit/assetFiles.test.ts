@@ -5,8 +5,10 @@ declare global {
 }
 
 import { describe, expect, it } from "vitest";
+import { assetManifest } from "../../src/content/assets";
 
 const requiredFiles = [
+  ...Object.values(assetManifest.sprites).map((path) => `public${path}`),
   "public/audio/proposal-theme.mp3",
   "public/photos/memory-01.jpg",
   "public/photos/memory-02.jpg",

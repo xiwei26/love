@@ -1,106 +1,42 @@
 import { describe, expect, it } from "vitest";
-import { createMemoryLayout } from "../../src/memory/createMemoryLayout";
+import { createMemoryLayout, getPhotoDimensions } from "../../src/memory/createMemoryLayout";
 
-function distance2d(first: { x: number; y: number }, second: { x: number; y: number }) {
-  const dx = first.x - second.x;
-  const dy = first.y - second.y;
-  return Math.sqrt(dx * dx + dy * dy);
-}
+const photos = Array.from({ length: 8 }, (_, i) => `/photos/memory-0${i + 1}.jpg`);
+const aspects = [16 / 9, 1, 4 / 3, 3 / 2, 4 / 3, 3 / 2, 4 / 3, 3 / 2];
 
-describe("createMemoryLayout", () => {
-  it("creates one hero photo and supporting photos in depth layers", () => {
-    const layout = createMemoryLayout([
-      "/photos/memory-01.jpg",
-      "/photos/memory-02.jpg",
-      "/photos/memory-03.jpg",
-      "/photos/memory-04.jpg",
-    ]);
-
-    expect(layout.hero.photoUrl).toBe("/photos/memory-01.jpg");
-    expect(layout.supporting).toHaveLength(3);
-    expect(layout.supporting.every((item) => item.z < layout.hero.z)).toBe(true);
+describe("memory photo framing", () => {
+  it.each([16 / 9, 1, 4 / 3, 3 / 2, 2 / 3])("preserves a %s image aspect without stretching", (aspect) => {
+    const { width, height } = getPhotoDimensions(aspect);
+    expect(width / height).toBeCloseTo(aspect);
+    expect(width).toBeLessThanOrEqual(2.6);
+    expect(height).toBeLessThanOrEqual(1.9);
   });
 
-  it("creates gather-back targets for every photo", () => {
-    const layout = createMemoryLayout([
-      "/photos/memory-01.jpg",
-      "/photos/memory-02.jpg",
-      "/photos/memory-03.jpg",
-    ]);
-
-    expect(layout.gatherTargets).toHaveLength(3);
-  });
-
-  it("spreads supporting photos across a wider field to avoid overlap", () => {
-    const layout = createMemoryLayout([
-      "/photos/memory-01.jpg",
-      "/photos/memory-02.jpg",
-      "/photos/memory-03.jpg",
-      "/photos/memory-04.jpg",
-      "/photos/memory-05.jpg",
-      "/photos/memory-06.jpg",
-      "/photos/memory-07.jpg",
-      "/photos/memory-08.jpg",
-    ]);
-
-    const xs = layout.supporting.map((item) => item.x);
-    const zs = layout.supporting.map((item) => item.z);
-
-    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(9);
-    expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(5);
-    expect(layout.supporting.every((item) => item.scale <= 0.7)).toBe(true);
-  });
-
-  it("preserves a balanced framing while avoiding the hero card", () => {
-    const layout = createMemoryLayout([
-      "/photos/memory-01.jpg",
-      "/photos/memory-02.jpg",
-      "/photos/memory-03.jpg",
-      "/photos/memory-04.jpg",
-      "/photos/memory-05.jpg",
-      "/photos/memory-06.jpg",
-      "/photos/memory-07.jpg",
-      "/photos/memory-08.jpg",
-    ]);
-
-    const supportingByPhoto = Object.fromEntries(
-      layout.supporting.map((item) => [item.photoUrl, item]),
-    );
-
-    expect((supportingByPhoto["/photos/memory-02.jpg"]?.x ?? 0) < -4).toBe(true);
-    expect((supportingByPhoto["/photos/memory-04.jpg"]?.y ?? 0) > 1.5).toBe(true);
-    expect((supportingByPhoto["/photos/memory-07.jpg"]?.y ?? 0) < -1.4).toBe(true);
-    expect(
-      layout.supporting.every(
-        (item) =>
-          Math.abs(item.x) > 2.3 ||
-          Math.abs(item.y - layout.hero.y) > 1.6 ||
-          Math.abs(item.z - layout.hero.z) > 2.4,
-      ),
-    ).toBe(true);
-  });
-
-  it("pushes nearby cards apart when they start too close", () => {
-    const layout = createMemoryLayout([
-      "/photos/memory-01.jpg",
-      "/photos/memory-02.jpg",
-      "/photos/memory-03.jpg",
-      "/photos/memory-04.jpg",
-      "/photos/memory-05.jpg",
-      "/photos/memory-06.jpg",
-      "/photos/memory-07.jpg",
-      "/photos/memory-08.jpg",
-    ]);
-
-    for (let index = 0; index < layout.supporting.length; index += 1) {
-      for (let compareIndex = index + 1; compareIndex < layout.supporting.length; compareIndex += 1) {
-        const current = layout.supporting[index];
-        const next = layout.supporting[compareIndex];
-
-        if (Math.abs(current.z - next.z) < 1.9) {
-          expect(distance2d(current, next)).toBeGreaterThan(1.2);
-        }
-      }
+  it.each([1440 / 900, 844 / 390, 390 / 844, 320 / 568])("keeps all projected photos visible and separated at viewport aspect %s", (aspectRatio) => {
+    const layout = createMemoryLayout(photos, { aspectRatio, photoAspects: aspects });
+    const placements = [layout.hero, ...layout.supporting];
+    expect(placements.map(item => item.photoUrl)).toEqual(photos);
+    expect(layout.supporting.every(item => item.z < layout.hero.z)).toBe(true);
+    expect(layout.gatherTargets).toHaveLength(photos.length);
+    const boxes = placements.map((item, index) => {
+      const viewHeight = 2 * Math.tan(21 * Math.PI / 180) * (5.2 - item.z);
+      const viewWidth = viewHeight * aspectRatio;
+      const size = getPhotoDimensions(aspects[index]);
+      const w = size.width * item.scale / viewWidth;
+      const h = size.height * item.scale / viewHeight;
+      const x = .5 + item.x / viewWidth;
+      const y = .5 - item.y / viewHeight;
+      return { left: x-w/2, right: x+w/2, top: y-h/2, bottom: y+h/2 };
+    });
+    for (const box of boxes) {
+      expect(box.left).toBeGreaterThan(.02);
+      expect(box.right).toBeLessThan(.98);
+      expect(box.top).toBeGreaterThan(.17);
+      expect(box.bottom).toBeLessThan(.97);
+    }
+    for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i], b = boxes[j];
+      expect(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top).toBe(true);
     }
   });
 });

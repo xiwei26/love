@@ -94,7 +94,7 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
       {
         alt: "Waiting hero",
         className: "stage-sprite--chest-boy",
-        src: assetManifest.sprites.boyRun,
+        src: assetManifest.sprites.boyIdle,
       },
       {
         alt: "Waiting heroine",
@@ -148,86 +148,6 @@ const sceneVisuals: Record<Exclude<SceneId, "memory">, StageVisual> = {
   },
 };
 
-function renderSharedAtmosphere() {
-  return `
-    <span class="scene-backdrop__glow scene-backdrop__glow--left"></span>
-    <span class="scene-backdrop__glow scene-backdrop__glow--right"></span>
-  `;
-}
-
-function renderSceneArchitecture(sceneId: Exclude<SceneId, "memory">) {
-  switch (sceneId) {
-    case "opening":
-      return `
-        <span class="scene-backdrop__mist scene-backdrop__mist--left"></span>
-        <span class="scene-backdrop__mist scene-backdrop__mist--right"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--opening-left"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--opening-right"></span>
-      `;
-    case "dragon":
-      return `
-        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--deep"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
-        <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
-        <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
-        <span class="scene-backdrop__lava scene-backdrop__lava--front"></span>
-        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--left"></span>
-        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--right"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--entry"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--bridge"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--boss"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--captive"></span>
-        <span class="scene-backdrop__chain scene-backdrop__chain--left"></span>
-        <span class="scene-backdrop__chain scene-backdrop__chain--right"></span>
-        <span class="scene-backdrop__cage"></span>
-        <span class="scene-backdrop__flare scene-backdrop__flare--dragon"></span>
-      `;
-    case "rescue":
-      return `
-        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--battle"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--left"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--right"></span>
-        <span class="scene-backdrop__mist scene-backdrop__mist--crater"></span>
-        <span class="scene-backdrop__lava scene-backdrop__lava--rear"></span>
-        <span class="scene-backdrop__lava scene-backdrop__lava--arena"></span>
-        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--center"></span>
-        <span class="scene-backdrop__lava-crack scene-backdrop__lava-crack--right"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--arena-left"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--arena-center"></span>
-        <span class="scene-backdrop__platform scene-backdrop__platform--captive"></span>
-        <span class="scene-backdrop__chain scene-backdrop__chain--left"></span>
-        <span class="scene-backdrop__chain scene-backdrop__chain--right"></span>
-        <span class="scene-backdrop__cage scene-backdrop__cage--fracture"></span>
-        <span class="scene-backdrop__flame-wave"></span>
-        <span class="scene-backdrop__impact"></span>
-        <span class="stage-effect stage-effect--rescue-slash"></span>
-        <span class="stage-effect stage-effect--rescue-burst"></span>
-      `;
-    case "chest":
-      return `
-        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--vault"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-left"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-right"></span>
-        <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
-        <span class="scene-backdrop__dais scene-backdrop__dais--chest"></span>
-        <span class="scene-backdrop__pillar scene-backdrop__pillar--left"></span>
-        <span class="scene-backdrop__pillar scene-backdrop__pillar--right"></span>
-      `;
-    case "proposal":
-      return `
-        <span class="scene-backdrop__cave-arch scene-backdrop__cave-arch--proposal"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-left"></span>
-        <span class="scene-backdrop__crystal scene-backdrop__crystal--treasure-right"></span>
-        <span class="scene-backdrop__mist scene-backdrop__mist--gold"></span>
-        <span class="scene-backdrop__dais scene-backdrop__dais--proposal"></span>
-        <span class="scene-backdrop__beam scene-backdrop__beam--left"></span>
-        <span class="scene-backdrop__beam scene-backdrop__beam--center"></span>
-        <span class="scene-backdrop__beam scene-backdrop__beam--right"></span>
-      `;
-  }
-}
-
 function getBackdropImage(sceneId: Exclude<SceneId, "memory">) {
   return assetManifest.backgrounds[sceneId];
 }
@@ -243,11 +163,7 @@ function renderBackdrop(sceneId: SceneId) {
   return `
     <div class="scene-backdrop scene-backdrop--${sceneId}" aria-hidden="true"${style}>
       <span class="scene-backdrop__sky"></span>
-      ${renderSharedAtmosphere()}
-      ${renderSceneArchitecture(sceneId)}
-      <span class="scene-backdrop__ground"></span>
-      <span class="scene-backdrop__foreground scene-backdrop__foreground--left"></span>
-      <span class="scene-backdrop__foreground scene-backdrop__foreground--right"></span>
+
     </div>
   `;
 }
@@ -317,6 +233,9 @@ export function renderStage(root: HTMLElement, options: RenderStageOptions) {
 
   if (effects) {
     effects.innerHTML = sceneVisual ? renderSprites(sceneVisual.effects) : "";
+    if (options.sceneId === "rescue") {
+      effects.innerHTML += '<span class="stage-effect stage-effect--rescue-slash"></span><span class="stage-effect stage-effect--rescue-burst"></span>';
+    }
   }
 
   photoStrip.innerHTML = "";

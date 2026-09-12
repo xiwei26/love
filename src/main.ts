@@ -131,6 +131,7 @@ function renderScene(sceneId: keyof typeof copyByScene) {
 function syncViewportLayout() {
   syncViewportHeight();
   syncMemorySize();
+  viewportNote!.hidden = window.innerWidth >= window.innerHeight;
 }
 
 syncViewportLayout();
@@ -154,6 +155,7 @@ startOverlay.addEventListener("click", async () => {
   }
 
   hasStarted = true;
+  stageRoot.dataset.started = "true";
   startOverlay.hidden = true;
 
   await Promise.allSettled([preloadImages(stageImageAssets), music.start()]);
