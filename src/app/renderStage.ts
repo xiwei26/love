@@ -152,6 +152,16 @@ function getBackdropImage(sceneId: Exclude<SceneId, "memory">) {
   return assetManifest.backgrounds[sceneId];
 }
 
+function renderProposalBalloons() {
+  const lanes = [7, 17, 27, 73, 83, 93];
+  return `<div class="proposal-balloons" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => {
+    const delay = -(Math.floor(index / 6) * 10 + [2, 7, 12, 12, 7, 2][index % 6]);
+    return `<span class="heart-balloon" style="--lane:${lanes[index % lanes.length]}%;--size:${.8 + index % 4 * .14};--duration:30s;--delay:${delay}s;--sway:${index % 2 ? -16 : 16}px">
+      <img src="${assetManifest.sprites.heart}" alt="" draggable="false" />
+    </span>`;
+  }).join("")}</div>`;
+}
+
 function renderBackdrop(sceneId: SceneId) {
   if (sceneId === "memory") {
     return "";
@@ -163,7 +173,7 @@ function renderBackdrop(sceneId: SceneId) {
   return `
     <div class="scene-backdrop scene-backdrop--${sceneId}" aria-hidden="true"${style}>
       <span class="scene-backdrop__sky"></span>
-
+      ${sceneId === "proposal" ? renderProposalBalloons() : ""}
     </div>
   `;
 }
