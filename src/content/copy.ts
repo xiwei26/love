@@ -2,7 +2,7 @@ import type { SceneId, SubtitleCue } from "../engine/types";
 
 export const sceneCopy = {
   opening: "在一个藏着秘密与宝藏的世界里……",
-  dragon: "她不小心闯进了龙守护的秘境。",
+  dragon: "戴思羽不小心闯进了龙守护的秘境。",
   memory: "故事没有停在这一刻，之后的他们，还会一起越过高山。",
   chestPrompt: "点一下，打开属于我们的终章。",
 } as const;
