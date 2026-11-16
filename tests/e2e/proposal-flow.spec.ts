@@ -31,6 +31,7 @@ test("plays to the chest scene and reveals the proposal", async ({ page }) => {
 
   await startOverlay.click();
 
+  await expect.poll(() => page.evaluate(() => document.fullscreenElement === document.documentElement)).toBe(true);
   await expect(startOverlay).toBeHidden();
   await page.waitForFunction(() => {
     const appRoot = document.querySelector('[data-role="app-root"]');
@@ -45,6 +46,25 @@ test("plays to the chest scene and reveals the proposal", async ({ page }) => {
   await expect(appRoot).toHaveAttribute("data-scene", "proposal");
   await expect(proposalLine).toContainText(finalProposalLine);
 });
+
+for (const mode of ["unsupported", "rejected", "throws"] as const) {
+  test(`continues the story when fullscreen is ${mode}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", error => errors.push(error.message));
+    await page.addInitScript((mode) => {
+      Object.defineProperty(document, "fullscreenEnabled", { value: mode !== "unsupported" });
+      Element.prototype.requestFullscreen = () => {
+        if (mode === "throws") throw new Error("Fullscreen unavailable");
+        return Promise.reject(new Error("Fullscreen denied"));
+      };
+    }, mode);
+    await page.goto("/?testMode=1");
+    await page.getByRole("button", { name: "点击开启音乐与童话" }).click();
+    await page.locator('[data-role="chest-trigger"]').click();
+    await expect(page.locator('[data-role="proposal-line"]')).toContainText(finalProposalLine);
+    expect(errors).toEqual([]);
+  });
+}
 
 test("keeps the hero left of the heroine in stable character scenes", async ({ page }) => {
   await page.goto("/?testMode=1");

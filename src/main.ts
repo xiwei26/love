@@ -136,6 +136,7 @@ function syncViewportLayout() {
 
 syncViewportLayout();
 window.addEventListener("resize", syncViewportLayout);
+document.addEventListener("fullscreenchange", syncViewportLayout);
 window.visualViewport?.addEventListener("resize", syncViewportLayout);
 
 renderScene("opening");
@@ -158,7 +159,19 @@ startOverlay.addEventListener("click", async () => {
   stageRoot.dataset.started = "true";
   startOverlay.hidden = true;
 
-  await Promise.allSettled([preloadImages(stageImageAssets), music.start()]);
+  // Start audio and request fullscreen in the same user gesture, before awaiting assets.
+  const musicStarted = music.start();
+  if (document.fullscreenEnabled && !document.fullscreenElement) {
+    try {
+      void document.documentElement.requestFullscreen({ navigationUI: "hide" }).catch(() => {
+        // Fullscreen is optional; a rejected request must not interrupt the story.
+      });
+    } catch {
+      // Some browsers can reject the request synchronously.
+    }
+  }
+
+  await Promise.allSettled([preloadImages(stageImageAssets), musicStarted]);
 
   engine.start();
 });
