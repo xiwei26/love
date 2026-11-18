@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { createMemoryLayout, getPhotoDimensions } from "./createMemoryLayout";
 import type { MemoryPhotoPlacement, MemorySceneController } from "./types";
+import { createMemoryHearts } from "./createMemoryHearts";
 
 interface PhotoPlaneState {
   frameMaterial: THREE.MeshBasicMaterial;
@@ -125,6 +126,8 @@ export function createMemoryScene(): MemorySceneController {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 30);
   camera.position.set(0, 0, 5.2);
+  const hearts = createMemoryHearts();
+  scene.add(hearts.group);
 
   const renderer = new THREE.WebGLRenderer({
     alpha: true,
@@ -192,6 +195,17 @@ export function createMemoryScene(): MemorySceneController {
       state.gatherPosition.set(gather.x, gather.y, gather.z);
       state.scale = placement.scale;
     });
+    const size = renderer.getSize(new THREE.Vector2());
+    const bounds = currentPhotoStates.map(state => {
+      const dimensions = getPhotoDimensions(getTextureAspect(state.photoMaterial.map!));
+      const viewHeight = 2 * Math.tan(21 * Math.PI / 180) * (5.2 - state.targetPosition.z);
+      const x = size.x / 2 + state.targetPosition.x / viewHeight * size.y;
+      const y = size.y / 2 - state.targetPosition.y / viewHeight * size.y;
+      const w = (dimensions.width + .045) * state.scale / viewHeight * size.y;
+      const h = (dimensions.height + .045) * state.scale / viewHeight * size.y;
+      return { left: x - w / 2, right: x + w / 2, top: y - h / 2, bottom: y + h / 2 };
+    });
+    hearts.layout(size.x, size.y, bounds);
   }
 
   function ensureMounted() {
@@ -278,6 +292,7 @@ export function createMemoryScene(): MemorySceneController {
     particles.rotation.x = Math.sin(elapsed * 0.00016) * 0.03;
 
     camera.lookAt(0, 0, -0.6);
+    hearts.update(elapsed, reducedMotion);
 
     renderer.render(scene, camera);
     animationFrame = reducedMotion ? 0 : window.requestAnimationFrame(renderFrame);
@@ -364,6 +379,7 @@ export function createMemoryScene(): MemorySceneController {
         renderer.domElement.remove();
       }
       particleGeometry.dispose();
+      hearts.dispose();
       (particles.material as THREE.PointsMaterial).dispose();
       renderer.dispose();
     },

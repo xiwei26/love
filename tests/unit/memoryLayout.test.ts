@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createMemoryLayout, getPhotoDimensions } from "../../src/memory/createMemoryLayout";
+import { findHeartSpaces } from "../../src/memory/createMemoryHearts";
 
 const photos = Array.from({ length: 8 }, (_, i) => `/photos/memory-0${i + 1}.jpg`);
 const aspects = [16 / 9, 1, 4 / 3, 3 / 2, 4 / 3, 3 / 2, 4 / 3, 3 / 2];
@@ -38,5 +39,21 @@ describe("memory photo framing", () => {
       const a = boxes[i], b = boxes[j];
       expect(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top).toBe(true);
     }
+    const width = aspectRatio * 800;
+    const photoPixels = boxes.map(box => ({ left: box.left * width, right: box.right * width, top: box.top * 800, bottom: box.bottom * 800 }));
+    const hearts = findHeartSpaces(width, 800, photoPixels);
+    expect(hearts).toHaveLength(2);
+    hearts.forEach((heart, i) => {
+      expect(heart.top).toBeGreaterThanOrEqual(160);
+      expect(heart.bottom).toBeLessThan(800);
+      expect(heart.left).toBeGreaterThan(0);
+      expect(heart.right).toBeLessThan(width);
+      for (const box of [...photoPixels, ...hearts.slice(0, i)]) {
+        expect(heart.right <= box.left || box.right <= heart.left || heart.bottom <= box.top || box.bottom <= heart.top).toBe(true);
+      }
+    });
+  });
+  it("omits hearts when the photo fills all available space", () => {
+    expect(findHeartSpaces(390, 844, [{ left: 0, right: 390, top: 0, bottom: 844 }])).toEqual([]);
   });
 });
